@@ -979,7 +979,7 @@ async function supabaseForgotPassword(email) {
   await fetch(SUPABASE_URL + '/auth/v1/recover', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY },
-    body: JSON.stringify({ email, redirect_to: 'https://lucent-crostata-cd10d9.netlify.app' })
+    body: JSON.stringify({ email, redirect_to: 'https://property-portal-62v3-gm6xo8bjy-luxore-d-s-projects.vercel.app' })
   });
 }
 
