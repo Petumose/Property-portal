@@ -394,7 +394,7 @@ const ALL_UNITS = [
   {unit:'D602',name:'Maureen Nyokabi'},{unit:'D603',name:'Caroline Maina'},
   {unit:'D604',name:'Dr Betty Bonass'},{unit:'D605',name:'Hassanali Shabram'},
   {unit:'D606',name:'Edwin Muhande'},{unit:'D701',name:'D701 Tenant'},
-  {unit:'D702',name:'Jacqueline Owendi'},{unit:'D703',name:'D703 Tenant'},
+  {unit:'D702',name:'Jacqueline Owendi'},{unit:'D703',name:'Carolyne Wambui Ndumia'},
   {unit:'D704',name:'Jayne Wanjiku'},{unit:'D705',name:'Jane Mugo'},
   {unit:'D801',name:'Lydia Mugo'},{unit:'D802',name:'Dorothy Atieno'},
   {unit:'D803',name:'D803 Tenant'},{unit:'D804',name:'D804 Tenant'},
@@ -406,10 +406,18 @@ const ALL_UNITS = [
 // ─────────────────────────────────────────────
 async function fetchSheet(sheetName) {
   // Wrap in single quotes to handle sheet names with spaces/dots
-  const range = encodeURIComponent(`'${sheetName}'`);
+  const range = encodeURIComponent(`'${sheetName.trim()}'`);
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?key=${API_KEY}`;
   const res = await fetch(url);
-  if (!res.ok) throw new Error(`Failed to fetch sheet: ${sheetName} (${res.status})`);
+  if (!res.ok) {
+    // Try without quotes as fallback
+    const range2 = encodeURIComponent(sheetName.trim());
+    const url2 = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range2}?key=${API_KEY}`;
+    const res2 = await fetch(url2);
+    if (!res2.ok) throw new Error(`Failed to fetch sheet: ${sheetName} (${res.status})`);
+    const data2 = await res2.json();
+    return data2.values || [];
+  }
   const data = await res.json();
   return data.values || [];
 }
