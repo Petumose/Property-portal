@@ -430,14 +430,6 @@ async function fetchSheet(sheetName) {
 // Rows with "closing balance" contain closing balance
 // ─────────────────────────────────────────────
 function parseSheet(rows, unitName, ownerName) {
-  // Column mapping (0-indexed):
-  // col 0: quarter label or empty
-  // col 1: month label OR description
-  // col 2: description
-  // col 3: water amount (D)
-  // col 4: service charge amount (E)
-  // col 5: total amount (F)
-
   const months = [];
   let currentMonth = null;
   let waterBF = 0;
@@ -445,18 +437,40 @@ function parseSheet(rows, unitName, ownerName) {
 
   const MONTH_RE = /^(january|february|march|april|may|june|july|august|september|october|november|december)[\s\-–]?\d{2}/i;
 
+  // Auto-detect column offset by finding where numbers appear
+  // Some sheets use cols 3,4,5 and others use cols 4,5,6
+  let colOffset = 0;
+  for (let i = 0; i < Math.min(rows.length, 20); i++) {
+    const row = rows[i].map(c => (c || '').toString().trim());
+    const txt = row.join(' ').toLowerCase();
+    if (txt.includes('bal b/f') || txt.includes('bal b/d') || txt.includes('closing balance')) {
+      // Find first numeric column
+      for (let j = 2; j < row.length; j++) {
+        if (row[j] && /[\d,]/.test(row[j]) && parseFloat(row[j].replace(/[^0-9.-]/g,'')) > 0) {
+          colOffset = j - 3; // normalize to base 3
+          break;
+        }
+      }
+      break;
+    }
+  }
+
+  const wCol = 3 + colOffset;  // water column
+  const sCol = 4 + colOffset;  // service column
+  const tCol = 5 + colOffset;  // total column
+
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i].map(c => (c || '').toString().trim());
     const fullText = row.join(' ').toLowerCase();
 
-    // Opening balance — separate water b/f and service b/f
+    // Opening balance
     if (fullText.includes('bal b/f') || fullText.includes('bal b/d')) {
-      waterBF   = parseKsh(row[3] || '0', true);
-      serviceBF = parseKsh(row[4] || '0', true);
+      waterBF   = parseKsh(row[wCol] || row[wCol-1] || '0', true);
+      serviceBF = parseKsh(row[sCol] || row[sCol-1] || '0', true);
     }
 
-    // Detect month row
-    const monthCell = [row[0], row[1]].find(c => MONTH_RE.test(c));
+    // Detect month row — check cols 0,1,2
+    const monthCell = [row[0], row[1], row[2]].find(c => MONTH_RE.test(c));
     if (monthCell) {
       const prevBalance = months.length > 0 ? months[months.length - 1] : null;
       currentMonth = {
@@ -472,7 +486,7 @@ function parseSheet(rows, unitName, ownerName) {
       };
       months.push(currentMonth);
       if (fullText.includes('payment')) {
-        const p = parseKsh(row[3] || row[4] || '0');
+        const p = parseKsh(row[wCol] || row[wCol-1] || '0');
         if (p > 0) currentMonth.payment = p;
       }
       continue;
@@ -482,23 +496,23 @@ function parseSheet(rows, unitName, ownerName) {
 
     // Charges row
     if (fullText.includes('water and service') || fullText.includes('water & service')) {
-      const w = parseKsh(row[3] || '0');
-      const s = parseKsh(row[4] || '0');
+      const w = parseKsh(row[wCol] || row[wCol-1] || '0');
+      const s = parseKsh(row[sCol] || row[sCol-1] || '0');
       if (w > 0) currentMonth.water = w;
       if (s > 0) currentMonth.service = s;
     }
 
     // Payment row
     if (fullText.includes('payment received')) {
-      const p = parseKsh(row[3] || row[4] || '0');
+      const p = parseKsh(row[wCol] || row[wCol-1] || '0');
       if (p > 0) currentMonth.payment = p;
     }
 
-    // Closing balance row — water closing in col D, service in col E, total in col F
+    // Closing balance row
     if (fullText.includes('closing balance')) {
-      currentMonth.waterClosing   = parseKsh(row[3] || '0', true);
-      currentMonth.serviceClosing = parseKsh(row[4] || '0', true);
-      currentMonth.balance        = parseKsh(row[5] || row[4] || row[3] || '0');
+      currentMonth.waterClosing   = parseKsh(row[wCol] || '0', true);
+      currentMonth.serviceClosing = parseKsh(row[sCol] || '0', true);
+      currentMonth.balance        = parseKsh(row[tCol] || row[sCol] || row[wCol] || '0');
     }
   }
 
