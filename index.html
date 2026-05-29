@@ -465,14 +465,32 @@ function parseSheet(rows, unitName, ownerName) {
       serviceBF = parseKsh(row[sCol] || row[sCol-1] || '0', true);
     }
 
+    // Charges row — check BEFORE month detection so charges before month label are captured
+    if ((fullText.includes('water and service') || fullText.includes('water & service')) && !fullText.includes('closing balance')) {
+      const w = parseKsh(row[wCol] || '0');
+      const s = parseKsh(row[sCol] || '0');
+      // Store as pending charges to assign to next month
+      if (w > 0 || s > 0) {
+        // If we already have a current month, assign directly
+        if (currentMonth) {
+          if (w > 0) currentMonth.water = w;
+          if (s > 0) currentMonth.service = s;
+        } else {
+          // Store as pending for next month
+          waterBF._pendingWater = w;
+          waterBF._pendingService = s;
+        }
+      }
+    }
+
     // Detect month row — check cols 0,1,2
     const monthCell = [row[0], row[1], row[2]].find(c => MONTH_RE.test(c));
     if (monthCell) {
       const prevBalance = months.length > 0 ? months[months.length - 1] : null;
       currentMonth = {
         month: monthCell,
-        water: 0,
-        service: 0,
+        water: waterBF._pendingWater || 0,
+        service: waterBF._pendingService || 0,
         waterBF: prevBalance ? prevBalance.waterClosing : waterBF,
         serviceBF: prevBalance ? prevBalance.serviceClosing : serviceBF,
         waterClosing: 0,
@@ -480,6 +498,9 @@ function parseSheet(rows, unitName, ownerName) {
         payment: 0,
         balance: 0,
       };
+      // Clear pending
+      waterBF._pendingWater = 0;
+      waterBF._pendingService = 0;
       months.push(currentMonth);
       if (fullText.includes('payment')) {
         const p = parseKsh(row[wCol] || row[wCol-1] || '0');
@@ -490,7 +511,7 @@ function parseSheet(rows, unitName, ownerName) {
 
     if (!currentMonth) continue;
 
-    // Charges row — must have actual numbers, skip if empty
+    // Charges row after month label (some sheets have charges after)
     if ((fullText.includes('water and service') || fullText.includes('water & service')) && !fullText.includes('closing balance')) {
       const w = parseKsh(row[wCol] || '0');
       const s = parseKsh(row[sCol] || '0');
