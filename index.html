@@ -434,6 +434,8 @@ function parseSheet(rows, unitName, ownerName) {
   let currentMonth = null;
   let waterBF = 0;
   let serviceBF = 0;
+  let pendingWater = 0;
+  let pendingService = 0;
 
   const MONTH_RE = /^(january|february|march|april|may|june|july|august|september|october|november|december)[\s\-–]?\d{2}/i;
 
@@ -489,8 +491,8 @@ function parseSheet(rows, unitName, ownerName) {
       const prevBalance = months.length > 0 ? months[months.length - 1] : null;
       currentMonth = {
         month: monthCell,
-        water: waterBF._pendingWater || 0,
-        service: waterBF._pendingService || 0,
+        water: pendingWater || 0,
+        service: pendingService || 0,
         waterBF: prevBalance ? prevBalance.waterClosing : waterBF,
         serviceBF: prevBalance ? prevBalance.serviceClosing : serviceBF,
         waterClosing: 0,
@@ -499,12 +501,16 @@ function parseSheet(rows, unitName, ownerName) {
         balance: 0,
       };
       // Clear pending
-      waterBF._pendingWater = 0;
-      waterBF._pendingService = 0;
+      pendingWater = 0;
+      pendingService = 0;
       months.push(currentMonth);
+      // Payment on same row as month label - payments are negative in sheet
       if (fullText.includes('payment')) {
-        const p = parseKsh(row[wCol] || row[wCol-1] || '0');
-        if (p > 0) currentMonth.payment = p;
+        // Find all numeric values in row, take absolute values
+        for (let j = wCol; j <= tCol; j++) {
+          const v = parseKsh(row[j] || '0');
+          if (v > 0) { currentMonth.payment = v; break; }
+        }
       }
       continue;
     }
