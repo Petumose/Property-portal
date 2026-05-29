@@ -437,27 +437,20 @@ function parseSheet(rows, unitName, ownerName) {
 
   const MONTH_RE = /^(january|february|march|april|may|june|july|august|september|october|november|december)[\s\-–]?\d{2}/i;
 
-  // Auto-detect column offset by finding where numbers appear
+  // Auto-detect column offset by finding "Water Bill" header row
   // Some sheets use cols 3,4,5 and others use cols 4,5,6
-  let colOffset = 0;
-  for (let i = 0; i < Math.min(rows.length, 20); i++) {
-    const row = rows[i].map(c => (c || '').toString().trim());
-    const txt = row.join(' ').toLowerCase();
-    if (txt.includes('bal b/f') || txt.includes('bal b/d') || txt.includes('closing balance')) {
-      // Find first numeric column
-      for (let j = 2; j < row.length; j++) {
-        if (row[j] && /[\d,]/.test(row[j]) && parseFloat(row[j].replace(/[^0-9.-]/g,'')) > 0) {
-          colOffset = j - 3; // normalize to base 3
-          break;
-        }
+  let wCol = 3, sCol = 4, tCol = 5;
+  for (let i = 0; i < Math.min(rows.length, 15); i++) {
+    const row = rows[i].map(c => (c || '').toString().trim().toLowerCase());
+    for (let j = 0; j < row.length; j++) {
+      if (row[j].includes('water bill') || row[j] === 'water') {
+        wCol = j;
+        sCol = j + 1;
+        tCol = j + 2;
+        break;
       }
-      break;
     }
   }
-
-  const wCol = 3 + colOffset;  // water column
-  const sCol = 4 + colOffset;  // service column
-  const tCol = 5 + colOffset;  // total column
 
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i].map(c => (c || '').toString().trim());
