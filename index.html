@@ -437,19 +437,22 @@ function parseSheet(rows, unitName, ownerName) {
 
   const MONTH_RE = /^(january|february|march|april|may|june|july|august|september|october|november|december)[\s\-–]?\d{2}/i;
 
-  // Auto-detect column offset by finding "Water Bill" header row
-  // Some sheets use cols 3,4,5 and others use cols 4,5,6
+  // Auto-detect columns by finding FIRST "Water Bill" header row
+  // Only use the first occurrence to avoid re-detection on quarter headers
   let wCol = 3, sCol = 4, tCol = 5;
-  for (let i = 0; i < Math.min(rows.length, 15); i++) {
+  for (let i = 0; i < rows.length; i++) {
     const row = rows[i].map(c => (c || '').toString().trim().toLowerCase());
+    let found = false;
     for (let j = 0; j < row.length; j++) {
-      if (row[j].includes('water bill') || row[j] === 'water') {
+      if (row[j].includes('water bill') || row[j] === 'water bill') {
         wCol = j;
         sCol = j + 1;
         tCol = j + 2;
+        found = true;
         break;
       }
     }
+    if (found) break; // Stop at first occurrence only
   }
 
   for (let i = 0; i < rows.length; i++) {
@@ -487,10 +490,10 @@ function parseSheet(rows, unitName, ownerName) {
 
     if (!currentMonth) continue;
 
-    // Charges row
-    if (fullText.includes('water and service') || fullText.includes('water & service')) {
-      const w = parseKsh(row[wCol] || row[wCol-1] || '0');
-      const s = parseKsh(row[sCol] || row[sCol-1] || '0');
+    // Charges row — must have actual numbers, skip if empty
+    if ((fullText.includes('water and service') || fullText.includes('water & service')) && !fullText.includes('closing balance')) {
+      const w = parseKsh(row[wCol] || '0');
+      const s = parseKsh(row[sCol] || '0');
       if (w > 0) currentMonth.water = w;
       if (s > 0) currentMonth.service = s;
     }
