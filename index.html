@@ -572,10 +572,10 @@ function renderHomeowner(data, lastUpdated) {
 
   // Show previous month as current if latest month has no charges yet
   // (bills issued at start of following month)
-  let latestIdx = months.length - 1;
-  if (months.length > 1) {
+let latestIdx = months.length - 1;
+if (months.length > 1) {
     const last = months[months.length - 1];
-    if (last.water === 0 && last.service === 0 && last.payment === 0) {
+    if (last.water === 0 && last.service === 0 && last.payment === 0 && last.balance === 0) {
       latestIdx = months.length - 2;
     }
   }
