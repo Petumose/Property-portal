@@ -403,12 +403,12 @@ const ALL_UNITS = [
 async function fetchSheet(sheetName) {
   // Wrap in single quotes to handle sheet names with spaces/dots
   const range = encodeURIComponent(`'${sheetName.trim()}'`);
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?key=${API_KEY}`;
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?key=${API_KEY}&valueRenderOption=FORMATTED_VALUE`;
   const res = await fetch(url);
   if (!res.ok) {
     // Try without quotes as fallback
     const range2 = encodeURIComponent(sheetName.trim());
-    const url2 = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range2}?key=${API_KEY}`;
+    const url2 = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range2}?key=${API_KEY}&valueRenderOption=FORMATTED_VALUE`;
     const res2 = await fetch(url2);
     if (!res2.ok) throw new Error(`Failed to fetch sheet: ${sheetName} (${res.status})`);
     const data2 = await res2.json();
@@ -656,7 +656,7 @@ if (months.length > 1) {
             <div class="card-value" style="font-size:17px">${fmt(latest.waterBF)}</div>
           </div>
           <div style="background:var(--surface2);padding:1rem 1.3rem">
-            <div class="card-label">This month</div>
+            <div class="card-label">${latest.month} bill</div>
             <div class="card-value" style="font-size:17px">${fmt(latest.water)}</div>
           </div>
         </div>
@@ -677,7 +677,7 @@ if (months.length > 1) {
             <div class="card-value" style="font-size:17px">${fmt(latest.serviceBF)}</div>
           </div>
           <div style="background:var(--surface2);padding:1rem 1.3rem">
-            <div class="card-label">This month</div>
+            <div class="card-label">${latest.month} bill</div>
             <div class="card-value" style="font-size:17px">${fmt(latest.service)}</div>
           </div>
         </div>
