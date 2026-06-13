@@ -187,28 +187,29 @@ function parseSheet(rows, unitName, ownerName) {
   let waterBF = 0, serviceBF = 0;
   let pendingW = 0, pendingS = 0, pendingP = 0;
 
-  // For units with complex reconciliation sheets, skip to specific month
+  // Detect water/service column positions from first header row
+  let wCol = 3, sCol = 4, tCol = 5;
+
+  // For units with complex reconciliation sheets, skip to 2nd quarter
   if (SKIP_TO_Q2.includes(unitName)) {
     const skipIdx = rows.findIndex(r => {
       const txt = r.join(' ').toLowerCase();
       return txt.includes('2nd quater') || txt.includes('2nd quarter');
     });
     if (skipIdx > 0) {
-      // Find the closing balance row just before 2nd quarter to get correct BF
-      const bfRow = rows[skipIdx + 2]; // header rows after 2nd quarter marker
-      if (bfRow) {
-        const bfTxt = bfRow.join(' ').toLowerCase();
-        if (bfTxt.includes('closing balance') || bfTxt.includes('bal b/f')) {
-          waterBF = parseKsh(bfRow[wCol]||'0', true);
-          serviceBF = parseKsh(bfRow[sCol]||'0', true);
+      // Get BF from closing balance row just before Q2 starts
+      for (let k = skipIdx - 1; k >= Math.max(0, skipIdx - 5); k--) {
+        const r = rows[k].map(c=>(c||'').toString().trim());
+        const t = r.join(' ').toLowerCase();
+        if (t.includes('closing balance')) {
+          waterBF = parseKsh(r[wCol]||'0', true);
+          serviceBF = parseKsh(r[sCol]||'0', true);
+          break;
         }
       }
       rows = rows.slice(skipIdx);
     }
   }
-
-  // Detect water/service column positions from first header row
-  let wCol = 3, sCol = 4, tCol = 5;
   for (let i = 0; i < rows.length; i++) {
     const r = rows[i].map(c=>(c||'').toString().trim().toLowerCase());
     for (let j = 0; j < r.length; j++) {
