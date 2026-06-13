@@ -257,15 +257,13 @@ const ALL_UNITS = [
 ];
 
 async function fetchSheet(sheetName) {
- const range = `'${sheetName.trim()}'!A1:Z1000`;
+  const name = sheetName.trim();
+  const range = encodeURIComponent(name) + '!A1:Z1000';
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?key=${API_KEY}&valueRenderOption=FORMATTED_VALUE`;
   const res = await fetch(url);
-  if (!res.ok) {
-    const range2 = encodeURIComponent(`${sheetName.trim()}!A1:Z1000`);
-    const url2 = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range2}?key=${API_KEY}&valueRenderOption=FORMATTED_VALUE`;
-    const res2 = await fetch(url2);
-    if (!res2.ok) throw new Error(`Failed to fetch sheet: ${sheetName} (${res.status})`);
-    return (await res2.json()).values || [];
+  if (!res.ok) throw new Error(`Failed to fetch sheet: ${name} (${res.status})`);
+  return (await res.json()).values || [];
+}
   }
   return (await res.json()).values || [];
 }
