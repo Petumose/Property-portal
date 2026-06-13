@@ -168,7 +168,10 @@ async function fetchSheet(sheetName) {
 // ── PARSE ────────────────────────────────────
 function parseKsh(val, allowNeg) {
   if (!val) return 0;
-  const s = val.toString().replace(/,/g,'').replace(/[^0-9.\-]/g,'');
+  const trimmed = val.toString().trim();
+  // Dash alone means zero
+  if (/^-+$/.test(trimmed.replace(/\s/g,''))) return 0;
+  const s = trimmed.replace(/,/g,'').replace(/[^0-9.\-]/g,'');
   const n = parseFloat(s);
   if (isNaN(n)) return 0;
   return allowNeg ? n : Math.abs(n);
@@ -235,13 +238,15 @@ function parseSheet(rows, unitName, ownerName) {
         currentMonth = existing;
         // Check for payment on same row as existing month
         if (txt.includes('payment')) {
+          let totalPay = 0;
           for (let j = Math.max(0,wCol-1); j <= tCol; j++) {
             if (!raw[j]) continue;
             if (raw[j].includes('-')) {
               const p = parseKsh(raw[j]);
-              if (p > 0) currentMonth.payment += p;
+              totalPay += p;
             }
           }
+          if (totalPay > 0) currentMonth.payment = totalPay;
         }
         continue;
       }
@@ -258,13 +263,15 @@ function parseSheet(rows, unitName, ownerName) {
       months.push(currentMonth);
       // Check for payment on same row as month label
       if (txt.includes('payment')) {
+        let totalPay = 0;
         for (let j = Math.max(0,wCol-1); j <= tCol; j++) {
           if (!raw[j]) continue;
           if (raw[j].includes('-')) {
             const p = parseKsh(raw[j]);
-            if (p > 0) currentMonth.payment += p;
+            totalPay += p;
           }
         }
+        if (totalPay > 0) currentMonth.payment = totalPay;
       }
       continue;
     }
