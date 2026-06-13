@@ -359,9 +359,6 @@
 </div>
 
 <script>
-// ─────────────────────────────────────────────
-// CONFIG — replace with your real values
-// ─────────────────────────────────────────────
 const SHEET_ID      = '1fsmC2ft-uJfArAtmBFFvCmR62NNqkjTA76ulRjsJ0dc';
 const API_KEY       = 'AIzaSyAORZ8PWN4dnt06w8JPbi_dVlS9dJ3ZqW0';
 const SUPABASE_URL  = 'https://aymkbgkoralmgznfynnz.supabase.co';
@@ -370,7 +367,6 @@ const ADMIN_EMAIL   = 'admin@property.com';
 
 const UNIT_TAB_MAP = {};
 
-// All units for admin view
 const ALL_UNITS = [
   {unit:'D101',name:'Mellon Achieng Otieno'},{unit:'D102',name:'Daniel Njuguna'},
   {unit:'D103.1',name:'Lydia Were'},{unit:'D103.2',name:'Wessmen Investment'},
@@ -401,13 +397,11 @@ const ALL_UNITS = [
 // GOOGLE SHEETS FETCH
 // ─────────────────────────────────────────────
 async function fetchSheet(sheetName) {
-  // Wrap in single quotes to handle sheet names with spaces/dots
-const range = encodeURIComponent(`'${sheetName.trim()}'!A1:Z1000`);
+  const range = encodeURIComponent(`'${sheetName.trim()}'!A1:Z1000`);
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?key=${API_KEY}&valueRenderOption=FORMATTED_VALUE`;
   const res = await fetch(url);
   if (!res.ok) {
-    // Try without quotes as fallback
-    const range2 = encodeURIComponent(sheetName.trim());
+    const range2 = encodeURIComponent(`${sheetName.trim()}!A1:Z1000`);
     const url2 = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range2}?key=${API_KEY}&valueRenderOption=FORMATTED_VALUE`;
     const res2 = await fetch(url2);
     if (!res2.ok) throw new Error(`Failed to fetch sheet: ${sheetName} (${res.status})`);
@@ -419,76 +413,66 @@ const range = encodeURIComponent(`'${sheetName.trim()}'!A1:Z1000`);
 }
 
 // ─────────────────────────────────────────────
+// PARSE KSH VALUE
+// ─────────────────────────────────────────────
+function parseKsh(val, allowNegative) {
+  if (!val) return 0;
+  const str = val.toString().replace(/,/g, '').replace(/[^0-9.\-]/g, '');
+  const n = parseFloat(str);
+  if (isNaN(n)) return 0;
+  return allowNegative ? n : Math.abs(n);
+}
+
+// ─────────────────────────────────────────────
 // PARSE SHEET DATA
-// Expects your sheet structure:
-// Row with "Bal b/f" = opening balance
-// Rows with month names contain charges and payments
-// Rows with "closing balance" contain closing balance
 // ─────────────────────────────────────────────
 function parseSheet(rows, unitName, ownerName) {
   const months = [];
   let currentMonth = null;
   let waterBF = 0;
   let serviceBF = 0;
-  let pendingWater = 0;
-  let pendingService = 0;
 
   const MONTH_RE = /^(january|february|march|april|may|june|july|august|september|october|november|december)[\s\-–]?\d{2}/i;
 
   // Auto-detect columns by finding FIRST "Water Bill" header row
-  // Only use the first occurrence to avoid re-detection on quarter headers
   let wCol = 3, sCol = 4, tCol = 5;
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i].map(c => (c || '').toString().trim().toLowerCase());
-    let found = false;
     for (let j = 0; j < row.length; j++) {
-      if (row[j].includes('water bill') || row[j] === 'water bill') {
+      if (row[j].includes('water bill')) {
         wCol = j;
         sCol = j + 1;
         tCol = j + 2;
-        found = true;
         break;
       }
     }
-    if (found) break; // Stop at first occurrence only
+    if (wCol !== 3) break;
   }
 
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i].map(c => (c || '').toString().trim());
     const fullText = row.join(' ').toLowerCase();
 
-    // Opening balance
-    if (fullText.includes('bal b/f') || fullText.includes('bal b/d')) {
+    // Opening balance — only before any month is detected
+    if ((fullText.includes('bal b/f') || fullText.includes('bal b/d')) && !currentMonth) {
       waterBF   = parseKsh(row[wCol] || row[wCol-1] || '0', true);
       serviceBF = parseKsh(row[sCol] || row[sCol-1] || '0', true);
-    }
-
-    // Charges row — check BEFORE month detection so charges before month label are captured
-    if ((fullText.includes('water and service') || fullText.includes('water & service')) && !fullText.includes('closing balance')) {
-      const w = parseKsh(row[wCol] || '0');
-      const s = parseKsh(row[sCol] || '0');
-      // Store as pending charges to assign to next month
-      if (w > 0 || s > 0) {
-        // If we already have a current month, assign directly
-        if (currentMonth) {
-          if (w > 0) currentMonth.water = w;
-          if (s > 0) currentMonth.service = s;
-        } else {
-          // Store as pending for next month
-          waterBF._pendingWater = w;
-          waterBF._pendingService = s;
-        }
-      }
     }
 
     // Detect month row — check cols 0,1,2
     const monthCell = [row[0], row[1], row[2]].find(c => MONTH_RE.test(c));
     if (monthCell) {
+      // Check if this month already exists (2nd quarter repeat)
+      const exists = months.find(m => m.month.toLowerCase() === monthCell.toLowerCase());
+      if (exists) {
+        currentMonth = exists;
+        continue;
+      }
       const prevBalance = months.length > 0 ? months[months.length - 1] : null;
       currentMonth = {
         month: monthCell,
-        water: pendingWater || 0,
-        service: pendingService || 0,
+        water: 0,
+        service: 0,
         waterBF: prevBalance ? prevBalance.waterClosing : waterBF,
         serviceBF: prevBalance ? prevBalance.serviceClosing : serviceBF,
         waterClosing: 0,
@@ -496,53 +480,46 @@ function parseSheet(rows, unitName, ownerName) {
         payment: 0,
         balance: 0,
       };
-      // Clear pending
-      pendingWater = 0;
-      pendingService = 0;
       months.push(currentMonth);
-      // Payment on same row as month label - payments are negative in sheet
-      if (fullText.includes('payment')) {
-        // Find all numeric values in row, take absolute values
-        for (let j = wCol; j <= tCol; j++) {
-          const v = parseKsh(row[j] || '0');
-          if (v > 0) { currentMonth.payment = v; break; }
-        }
-      }
       continue;
     }
 
     if (!currentMonth) continue;
 
-    // Charges row after month label (some sheets have charges after)
-    if ((fullText.includes('water and service') || fullText.includes('water & service')) && !fullText.includes('closing balance')) {
+    // Charges row
+    if ((fullText.includes('water and service') || fullText.includes('water & service')) &&
+        !fullText.includes('closing balance') && !fullText.includes('sum total')) {
       const w = parseKsh(row[wCol] || '0');
       const s = parseKsh(row[sCol] || '0');
       if (w > 0) currentMonth.water = w;
       if (s > 0) currentMonth.service = s;
     }
 
-    // Payment row
-    if (fullText.includes('payment received')) {
-      const p = parseKsh(row[wCol] || row[wCol-1] || '0');
-      if (p > 0) currentMonth.payment = p;
+    // Payment row — look for negative values
+    if (fullText.includes('payment') && !fullText.includes('closing') && !fullText.includes('total bal') && !fullText.includes('sum')) {
+      for (let j = wCol - 1; j <= tCol; j++) {
+        if (!row[j]) continue;
+        const raw = row[j].toString();
+        if (raw.includes('-')) {
+          const p = parseKsh(raw);
+          if (p > 0) currentMonth.payment += p;
+        }
+      }
     }
 
     // Closing balance row
-    if (fullText.includes('closing balance')) {
-      currentMonth.waterClosing   = parseKsh(row[wCol] || '0', true);
-      currentMonth.serviceClosing = parseKsh(row[sCol] || '0', true);
-      currentMonth.balance        = parseKsh(row[tCol] || row[sCol] || row[wCol] || '0');
+    if (fullText.includes('closing balance') || (fullText.includes('closing') && fullText.includes('balance'))) {
+      const wc = parseKsh(row[wCol] || '0', true);
+      const sc = parseKsh(row[sCol] || '0', true);
+      const tc = parseKsh(row[tCol] || '0', true);
+      currentMonth.waterClosing   = wc;
+      currentMonth.serviceClosing = sc;
+      // Use total column, fallback to sum of water+service closing
+      currentMonth.balance = Math.abs(tc) || Math.abs(wc + sc);
     }
   }
 
   return { unit: unitName, name: ownerName, months, waterBF, serviceBF };
-}
-
-function parseKsh(val, allowNegative) {
-  const str = val.toString().replace(/[^0-9.\-]/g, '');
-  const n = parseFloat(str);
-  if (isNaN(n)) return 0;
-  return allowNegative ? n : Math.abs(n);
 }
 
 function fmt(n) {
@@ -558,7 +535,6 @@ async function fetchLastUpdated() {
     const rows = await fetchSheet('LastUpdated');
     return rows[0]?.[0] || 'N/A';
   } catch {
-    // Try to get spreadsheet metadata for last modified
     return new Date().toLocaleDateString('en-KE', { day: 'numeric', month: 'long', year: 'numeric' });
   }
 }
@@ -570,10 +546,9 @@ function renderHomeowner(data, lastUpdated) {
   const months = data.months;
   if (!months.length) return `<p style="color:var(--muted);padding:2rem 0">No data found for your unit. Please contact your property manager.</p>`;
 
-  // Show previous month as current if latest month has no charges yet
-  // (bills issued at start of following month)
-let latestIdx = months.length - 1;
-if (months.length > 1) {
+  // Show latest month that has actual data
+  let latestIdx = months.length - 1;
+  if (months.length > 1) {
     const last = months[months.length - 1];
     if (last.water === 0 && last.service === 0 && last.payment === 0 && last.balance === 0) {
       latestIdx = months.length - 2;
@@ -585,7 +560,6 @@ if (months.length > 1) {
   const waterSubtotal   = latest.waterBF + latest.water;
   const serviceSubtotal = latest.serviceBF + latest.service;
   const grandTotal      = waterSubtotal + serviceSubtotal;
-  // Outstanding = closing balance if set, otherwise grand total if b/f exists and no charges entered yet
   const outstandingAmount = latest.balance > 0 ? latest.balance : (grandTotal > 0 && latest.water === 0 && latest.service === 0 ? grandTotal : latest.balance);
   const hasBalance = outstandingAmount > 0;
 
@@ -660,7 +634,7 @@ if (months.length > 1) {
             <div class="card-value" style="font-size:17px">${fmt(latest.water)}</div>
           </div>
         </div>
-        <div style="background:var(--surface);border:0.5px solid rgba(61,153,112,0.15);border-top:none;border-radius:0 0 0 0;padding:0.9rem 1.3rem;display:flex;justify-content:space-between;align-items:center">
+        <div style="background:var(--surface);border:0.5px solid rgba(61,153,112,0.15);border-top:none;padding:0.9rem 1.3rem;display:flex;justify-content:space-between;align-items:center">
           <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em">Water subtotal</span>
           <span style="font-family:'DM Serif Display',serif;font-size:17px;color:var(--text)">${fmt(waterSubtotal)}</span>
         </div>
@@ -779,7 +753,7 @@ if (months.length > 1) {
       <button onclick="changePassword()" style="background:var(--surface2);border:0.5px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--text);font-size:13px;padding:10px 18px;cursor:pointer;font-family:'DM Sans',sans-serif">
         Update password
       </button>
-      <p style="font-size:11px;color:var(--muted);margin-top:8px">Password is saved on this device.</p>
+      <p style="font-size:11px;color:var(--muted);margin-top:8px">Password is saved securely and works on all devices.</p>
     </div>
 
     <p class="timestamp">Last updated: ${lastUpdated}</p>
@@ -912,16 +886,9 @@ async function changePassword() {
 // ─────────────────────────────────────────────
 let currentUser = null;
 
-// Restore session from localStorage
-function saveSession(user) {
-  localStorage.setItem('pp_session', JSON.stringify(user));
-}
-function clearSession() {
-  localStorage.removeItem('pp_session');
-}
-function getSession() {
-  try { return JSON.parse(localStorage.getItem('pp_session')); } catch { return null; }
-}
+function saveSession(user) { localStorage.setItem('pp_session', JSON.stringify(user)); }
+function clearSession() { localStorage.removeItem('pp_session'); }
+function getSession() { try { return JSON.parse(localStorage.getItem('pp_session')); } catch { return null; } }
 
 document.getElementById('login-btn').addEventListener('click', handleLogin);
 
@@ -930,7 +897,6 @@ document.getElementById('login-btn').addEventListener('click', handleLogin);
   const saved = getSession();
   if (!saved?.token) return;
   try {
-    // Verify token still valid
     const r = await fetch(SUPABASE_URL + '/auth/v1/user', {
       headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + saved.token }
     });
@@ -953,9 +919,7 @@ document.getElementById('login-btn').addEventListener('click', handleLogin);
         const data = parseSheet(rows, saved.unit, saved.name);
         document.getElementById('main-content').innerHTML = renderHomeowner(data, lastUpdated);
       }
-    } else {
-      clearSession();
-    }
+    } else { clearSession(); }
   } catch { clearSession(); }
 })();
 
@@ -976,7 +940,9 @@ document.getElementById('forgot-link').addEventListener('click', async (e) => {
   msgEl.style.color = '#6dbf9a';
   msgEl.textContent = 'Password reset email sent. Check your inbox.';
 });
+
 document.getElementById('password-input').addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+
 document.getElementById('signout-btn').addEventListener('click', async () => {
   if (currentUser?.token) await supabaseSignOut(currentUser.token);
   currentUser = null;
@@ -988,7 +954,6 @@ document.getElementById('signout-btn').addEventListener('click', async () => {
   document.getElementById('error-msg').style.display = 'none';
 });
 
-// Supabase auth helpers
 async function supabaseSignOut(token) {
   try {
     await fetch(SUPABASE_URL + '/auth/v1/logout', {
@@ -1020,7 +985,7 @@ async function supabaseForgotPassword(email) {
   await fetch(SUPABASE_URL + '/auth/v1/recover', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY },
-    body: JSON.stringify({ email, redirect_to: 'https://property-portal-62v3-gm6xo8bjy-luxore-d-s-projects.vercel.app' })
+    body: JSON.stringify({ email, redirect_to: 'https://property-portal-sooty.vercel.app' })
   });
 }
 
@@ -1093,8 +1058,6 @@ async function handleLogin() {
     document.getElementById('login-btn').disabled = false;
   }
 }
-
-
 </script>
 </body>
 </html>
