@@ -264,7 +264,6 @@ function parseSheet(rows, unitName, ownerName) {
       currentMonth.balance = Math.abs(tc) || Math.abs(currentMonth.waterClosing + currentMonth.serviceClosing);
     }
   }
-
   return { unit:unitName, name:ownerName, months, waterBF, serviceBF };
 }
 
