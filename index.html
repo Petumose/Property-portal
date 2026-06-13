@@ -231,7 +231,20 @@ function parseSheet(rows, unitName, ownerName) {
     const mCell = [raw[0],raw[1],raw[2]].find(c=>MONTH_RE.test(c));
     if (mCell) {
       const existing = months.find(m=>m.month.toLowerCase()===mCell.toLowerCase());
-      if (existing) { currentMonth = existing; continue; }
+      if (existing) {
+        currentMonth = existing;
+        // Check for payment on same row as existing month
+        if (txt.includes('payment')) {
+          for (let j = Math.max(0,wCol-1); j <= tCol; j++) {
+            if (!raw[j]) continue;
+            if (raw[j].includes('-')) {
+              const p = parseKsh(raw[j]);
+              if (p > 0) currentMonth.payment += p;
+            }
+          }
+        }
+        continue;
+      }
       const prev = months.length > 0 ? months[months.length-1] : null;
       currentMonth = {
         month: mCell,
@@ -243,6 +256,16 @@ function parseSheet(rows, unitName, ownerName) {
       };
       pendingW=0; pendingS=0; pendingP=0;
       months.push(currentMonth);
+      // Check for payment on same row as month label
+      if (txt.includes('payment')) {
+        for (let j = Math.max(0,wCol-1); j <= tCol; j++) {
+          if (!raw[j]) continue;
+          if (raw[j].includes('-')) {
+            const p = parseKsh(raw[j]);
+            if (p > 0) currentMonth.payment += p;
+          }
+        }
+      }
       continue;
     }
 
