@@ -314,7 +314,8 @@ function renderHomeowner(data, lastUpdated) {
   const wSub=latest.waterBF+latest.water, sSub=latest.serviceBF+latest.service;
   const grand=wSub+sSub;
   const outstanding=latest.balance>0?latest.balance:(grand>0&&latest.water===0&&latest.service===0?grand:latest.balance);
-  const hasBal=outstanding>0;
+  const isCredit=latest.balance<0;
+  const hasBal=outstanding>0&&!isCredit;
 
   let insight='';
   if (prev&&prev.water>0) {
@@ -358,7 +359,7 @@ function renderHomeowner(data, lastUpdated) {
       <h1 class="page-title">${data.name}</h1>
       <p style="color:var(--muted);font-size:12px;margin-top:-1.5rem">Unit ${data.unit} &nbsp;·&nbsp; ${latest.month}</p>
     </div>
-    ${hasBal?`<div class="alert alert-danger"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>Outstanding balance: <strong>${fmt(outstanding)}</strong>. Please pay at your earliest convenience.</span></div>`:`<div class="alert alert-success"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Your account is fully cleared. No outstanding balance.</span></div>`}
+    ${hasBal?`<div class="alert alert-danger"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>Outstanding balance: <strong>${fmt(outstanding)}</strong>. Please pay at your earliest convenience.</span></div>`:isCredit?`<div class="alert alert-success"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>You have an overpayment credit of <strong>KSh ${Math.abs(latest.balance).toLocaleString('en-KE',{minimumFractionDigits:2})}</strong>. This will be applied to your next bill.</span></div>`:`<div class="alert alert-success"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Your account is fully cleared. No outstanding balance.</span></div>`}
     <div class="chart-box" style="margin-bottom:1.8rem">
       <div class="section-label" style="margin-bottom:1.4rem">Bill breakdown — ${latest.month}</div>
       <div style="margin-bottom:1px">
