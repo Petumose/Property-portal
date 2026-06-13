@@ -402,7 +402,7 @@ const ALL_UNITS = [
 // ─────────────────────────────────────────────
 async function fetchSheet(sheetName) {
   // Wrap in single quotes to handle sheet names with spaces/dots
-  const range = encodeURIComponent(`'${sheetName.trim()}'`);
+const range = encodeURIComponent(`'${sheetName.trim()}'!A1:Z1000`);
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?key=${API_KEY}&valueRenderOption=FORMATTED_VALUE`;
   const res = await fetch(url);
   if (!res.ok) {
