@@ -128,6 +128,9 @@ const SUPABASE_URL = 'https://aymkbgkoralmgznfynnz.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_jewDtFZIL6IcF_6KLBaf8A_uets21aw';
 const ADMIN_EMAIL  = 'admin@property.com';
 
+// Units where we skip to 2nd quarter data only
+const SKIP_TO_Q2 = ['D304'];
+
 const ALL_UNITS = [
   {unit:'D101',name:'Mellon Achieng Otieno'},{unit:'D102',name:'Daniel Njuguna'},
   {unit:'D103.1',name:'Lydia Were'},{unit:'D103.2',name:'Wessmen Investment'},
@@ -183,6 +186,12 @@ function parseSheet(rows, unitName, ownerName) {
   let currentMonth = null;
   let waterBF = 0, serviceBF = 0;
   let pendingW = 0, pendingS = 0, pendingP = 0;
+
+  // For units with complex reconciliation sheets, skip to 2nd quarter
+  if (SKIP_TO_Q2.includes(unitName)) {
+    const q2idx = rows.findIndex(r => r.join(' ').toLowerCase().includes('2nd quater') || r.join(' ').toLowerCase().includes('2nd quarter'));
+    if (q2idx > 0) rows = rows.slice(q2idx);
+  }
 
   // Detect water/service column positions from first header row
   let wCol = 3, sCol = 4, tCol = 5;
