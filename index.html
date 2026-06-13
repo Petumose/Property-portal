@@ -409,10 +409,6 @@ async function fetchSheet(sheetName) {
   if (!res.ok) throw new Error(`Sheet error: ${name} (${res.status})`);
   return (await res.json()).values || [];
 }
-  const data = await res.json();
-  return data.values || [];
-}
-
 // ─────────────────────────────────────────────
 // PARSE SHEET DATA
 // Expects your sheet structure:
