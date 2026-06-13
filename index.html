@@ -7,74 +7,166 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
   :root {
-    --bg: #0d1b2a; --surface: #0f2035; --surface2: #122540;
-    --border: rgba(77,157,224,0.12); --text: #e0eaf4; --muted: #3d6b8a;
-    --accent: #4d9de0; --accent-dim: rgba(77,157,224,0.15);
-    --danger: #c0392b; --danger-dim: rgba(192,57,43,0.12); --gold: #7ec8e3;
+    --bg: #0d1b2a;
+    --surface: #0f2035;
+    --surface2: #122540;
+    --border: rgba(77,157,224,0.12);
+    --text: #e0eaf4;
+    --muted: #3d6b8a;
+    --accent: #4d9de0;
+    --accent-dim: rgba(77,157,224,0.15);
+    --danger: #c0392b;
+    --danger-dim: rgba(192,57,43,0.12);
+    --gold: #7ec8e3;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
-  #login-screen { min-height:100vh; display:flex; align-items:center; justify-content:center; background:var(--bg); position:relative; overflow:hidden; }
-  #login-screen::before { content:''; position:absolute; width:600px; height:600px; background:radial-gradient(circle,rgba(61,153,112,0.06) 0%,transparent 70%); top:-100px; left:-100px; pointer-events:none; }
-  .login-card { width:420px; background:var(--surface); border:0.5px solid var(--border); border-radius:20px; padding:2.5rem; position:relative; z-index:1; }
-  .login-logo { width:44px; height:44px; background:var(--accent-dim); border:1px solid rgba(61,153,112,0.3); border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:1.5rem; }
-  .login-title { font-family:'DM Serif Display',serif; font-size:26px; color:var(--text); margin-bottom:4px; }
-  .login-sub { font-size:13px; color:var(--muted); margin-bottom:2rem; font-weight:300; }
-  .field-label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px; display:block; }
-  .field { margin-bottom:1.1rem; }
-  .field input { width:100%; background:var(--bg); border:0.5px solid rgba(255,255,255,0.1); border-radius:10px; padding:11px 14px; color:var(--text); font-size:14px; font-family:'DM Sans',sans-serif; outline:none; transition:border-color 0.2s; }
-  .field input:focus { border-color:rgba(61,153,112,0.5); }
-  .btn-login { width:100%; padding:12px; background:var(--accent); border:none; border-radius:10px; color:#fff; font-size:14px; font-family:'DM Sans',sans-serif; font-weight:500; cursor:pointer; transition:opacity 0.2s; margin-top:0.5rem; }
-  .btn-login:hover { opacity:0.88; }
-  .error-msg { background:var(--danger-dim); border:0.5px solid rgba(192,57,43,0.25); border-radius:8px; padding:10px 14px; color:#e07070; font-size:13px; margin-bottom:1rem; display:none; }
-  .loading-msg { background:var(--accent-dim); border:0.5px solid rgba(61,153,112,0.25); border-radius:8px; padding:10px 14px; color:var(--accent); font-size:13px; margin-bottom:1rem; display:none; text-align:center; }
-  #app { display:none; }
-  nav { border-bottom:0.5px solid var(--border); padding:0 2rem; position:sticky; top:0; background:rgba(10,13,15,0.95); backdrop-filter:blur(12px); z-index:100; }
-  .nav-inner { max-width:960px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:56px; }
-  .nav-brand { display:flex; align-items:center; gap:10px; }
-  .nav-icon { width:28px; height:28px; background:var(--accent-dim); border:1px solid rgba(61,153,112,0.3); border-radius:7px; display:flex; align-items:center; justify-content:center; }
-  .nav-title { font-size:14px; font-weight:500; color:#bbb; }
-  .nav-right { display:flex; align-items:center; gap:14px; }
-  .nav-unit { font-size:11px; color:var(--muted); }
-  .btn-signout { background:none; border:0.5px solid rgba(255,255,255,0.1); border-radius:7px; color:var(--muted); font-size:12px; padding:5px 12px; cursor:pointer; font-family:'DM Sans',sans-serif; }
-  main { max-width:960px; margin:0 auto; padding:2.5rem 2rem; }
-  .page-eyebrow { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px; }
-  .page-title { font-family:'DM Serif Display',serif; font-size:28px; color:var(--text); font-weight:400; margin-bottom:2.2rem; }
-  .alert { border-radius:12px; padding:14px 18px; display:flex; align-items:flex-start; gap:10px; margin-bottom:1.8rem; font-size:13.5px; line-height:1.6; }
-  .alert-danger { background:var(--danger-dim); border:0.5px solid rgba(192,57,43,0.25); color:#e07070; }
-  .alert-success { background:var(--accent-dim); border:0.5px solid rgba(61,153,112,0.25); color:#6dbf9a; }
-  .cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(155px,1fr)); gap:12px; margin-bottom:1.8rem; }
-  .card { background:var(--surface); border:0.5px solid var(--border); border-radius:12px; padding:1.1rem 1.2rem; }
-  .card-label { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px; }
-  .card-value { font-family:'DM Serif Display',serif; font-size:21px; color:var(--text); margin-bottom:3px; }
-  .card-value.green { color:var(--accent); } .card-value.red { color:#e05c5c; }
-  .card-sub { font-size:11px; color:var(--muted); }
-  .chart-box { background:var(--surface); border:0.5px solid var(--border); border-radius:14px; padding:1.5rem; margin-bottom:1.8rem; }
-  .section-label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:1.2rem; }
-  .bar-chart { display:flex; align-items:flex-end; gap:10px; height:140px; }
-  .bar-group { display:flex; flex-direction:column; align-items:center; gap:6px; flex:1; }
-  .bar-wrap { width:100%; display:flex; align-items:flex-end; justify-content:center; height:110px; }
-  .bar { width:60%; background:var(--accent); border-radius:5px 5px 0 0; transition:height 0.6s; position:relative; }
-  .bar-label { font-size:11px; color:var(--muted); text-align:center; }
-  .table-box { background:var(--surface); border:0.5px solid var(--border); border-radius:14px; padding:1.5rem; overflow-x:auto; margin-bottom:1.8rem; }
-  table { width:100%; border-collapse:collapse; font-size:13px; min-width:580px; }
-  th { font-size:10px; color:var(--muted); font-weight:400; text-transform:uppercase; padding:6px 10px; border-bottom:0.5px solid var(--border); text-align:right; }
-  th:first-child { text-align:left; }
-  td { padding:11px 10px; border-bottom:0.5px solid rgba(255,255,255,0.04); text-align:right; color:#bbb; }
-  td:first-child { text-align:left; color:#888; }
-  tr:last-child td { border-bottom:none; }
-  .badge { display:inline-block; font-size:10px; padding:3px 8px; border-radius:4px; font-weight:500; }
-  .badge-red { background:var(--danger-dim); color:#e05c5c; border:0.5px solid rgba(192,57,43,0.2); }
-  .badge-green { background:var(--accent-dim); color:var(--accent); border:0.5px solid rgba(61,153,112,0.2); }
-  .badge-admin { background:rgba(201,168,76,0.12); color:var(--gold); border:0.5px solid rgba(201,168,76,0.25); font-size:10px; padding:2px 7px; border-radius:4px; }
-  .timestamp { font-size:11px; color:#2a3038; text-align:right; margin-top:0.8rem; }
-  .spinner { width:32px; height:32px; border:2px solid rgba(61,153,112,0.2); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; margin:4rem auto; display:block; }
-  @keyframes spin { to { transform:rotate(360deg); } }
-  .loading-view { text-align:center; padding:4rem 2rem; }
-  .loading-view p { color:var(--muted); font-size:13px; margin-top:1rem; }
-  .insight { background:var(--surface2); border:0.5px solid rgba(61,153,112,0.18); border-radius:12px; padding:14px 18px; margin-bottom:1.8rem; display:flex; gap:10px; align-items:flex-start; }
-  .insight p { font-size:13.5px; color:#7aaa90; line-height:1.65; }
-  @media (max-width:600px) { main { padding:1.5rem 1rem; } .cards { grid-template-columns:repeat(2,1fr); } .login-card { width:92vw; padding:1.8rem; } }
+  #login-screen {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: var(--bg); position: relative; overflow: hidden;
+  }
+  #login-screen::before {
+    content: ''; position: absolute; width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(61,153,112,0.06) 0%, transparent 70%);
+    top: -100px; left: -100px; pointer-events: none;
+  }
+  .login-card {
+    width: 420px; background: var(--surface); border: 0.5px solid var(--border);
+    border-radius: 20px; padding: 2.5rem; position: relative; z-index: 1;
+  }
+  .login-logo {
+    width: 44px; height: 44px; background: var(--accent-dim);
+    border: 1px solid rgba(61,153,112,0.3); border-radius: 12px;
+    display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;
+  }
+  .login-title { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--text); margin-bottom: 4px; }
+  .login-sub { font-size: 13px; color: var(--muted); margin-bottom: 2rem; font-weight: 300; }
+  .field-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; display: block; }
+  .field { margin-bottom: 1.1rem; }
+  .field input {
+    width: 100%; background: var(--bg); border: 0.5px solid rgba(255,255,255,0.1);
+    border-radius: 10px; padding: 11px 14px; color: var(--text); font-size: 14px;
+    font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.2s;
+  }
+  .field input:focus { border-color: rgba(61,153,112,0.5); }
+  .btn-login {
+    width: 100%; padding: 12px; background: var(--accent); border: none; border-radius: 10px;
+    color: #fff; font-size: 14px; font-family: 'DM Sans', sans-serif; font-weight: 500;
+    cursor: pointer; letter-spacing: 0.02em; transition: opacity 0.2s; margin-top: 0.5rem;
+  }
+  .btn-login:hover { opacity: 0.88; }
+  .error-msg {
+    background: var(--danger-dim); border: 0.5px solid rgba(192,57,43,0.25);
+    border-radius: 8px; padding: 10px 14px; color: #e07070; font-size: 13px;
+    margin-bottom: 1rem; display: none;
+  }
+  .loading-msg {
+    background: var(--accent-dim); border: 0.5px solid rgba(61,153,112,0.25);
+    border-radius: 8px; padding: 10px 14px; color: var(--accent); font-size: 13px;
+    margin-bottom: 1rem; display: none; text-align: center;
+  }
+  #app { display: none; }
+  nav {
+    border-bottom: 0.5px solid var(--border); padding: 0 2rem; position: sticky; top: 0;
+    background: rgba(10,13,15,0.95); backdrop-filter: blur(12px); z-index: 100;
+  }
+  .nav-inner {
+    max-width: 960px; margin: 0 auto; display: flex; align-items: center;
+    justify-content: space-between; height: 56px;
+  }
+  .nav-brand { display: flex; align-items: center; gap: 10px; }
+  .nav-icon {
+    width: 28px; height: 28px; background: var(--accent-dim);
+    border: 1px solid rgba(61,153,112,0.3); border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .nav-title { font-size: 14px; font-weight: 500; color: #bbb; letter-spacing: 0.01em; }
+  .nav-right { display: flex; align-items: center; gap: 14px; }
+  .nav-unit { font-size: 11px; color: var(--muted); }
+  .btn-signout {
+    background: none; border: 0.5px solid rgba(255,255,255,0.1); border-radius: 7px;
+    color: var(--muted); font-size: 12px; padding: 5px 12px; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; transition: color 0.2s;
+  }
+  .btn-signout:hover { color: var(--text); }
+  main { max-width: 960px; margin: 0 auto; padding: 2.5rem 2rem; }
+  .page-header { margin-bottom: 2.2rem; }
+  .page-eyebrow { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+  .page-title { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--text); font-weight: 400; letter-spacing: -0.3px; }
+  .alert {
+    border-radius: 12px; padding: 14px 18px; display: flex; align-items: flex-start;
+    gap: 10px; margin-bottom: 1.8rem; font-size: 13.5px; line-height: 1.6;
+  }
+  .alert-danger { background: var(--danger-dim); border: 0.5px solid rgba(192,57,43,0.25); color: #e07070; }
+  .alert-success { background: var(--accent-dim); border: 0.5px solid rgba(61,153,112,0.25); color: #6dbf9a; }
+  .alert svg { flex-shrink: 0; margin-top: 1px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 12px; margin-bottom: 1.8rem; }
+  .card {
+    background: var(--surface); border: 0.5px solid var(--border); border-radius: 12px;
+    padding: 1.1rem 1.2rem; transition: border-color 0.2s;
+  }
+  .card:hover { border-color: rgba(255,255,255,0.12); }
+  .card-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .card-value { font-family: 'DM Serif Display', serif; font-size: 21px; color: var(--text); margin-bottom: 3px; }
+  .card-value.green { color: var(--accent); }
+  .card-value.red { color: #e05c5c; }
+  .card-sub { font-size: 11px; color: var(--muted); }
+  .insight {
+    background: var(--surface2); border: 0.5px solid rgba(61,153,112,0.18);
+    border-radius: 12px; padding: 14px 18px; margin-bottom: 1.8rem;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .insight p { font-size: 13.5px; color: #7aaa90; line-height: 1.65; }
+  .chart-box {
+    background: var(--surface); border: 0.5px solid var(--border);
+    border-radius: 14px; padding: 1.5rem; margin-bottom: 1.8rem;
+  }
+  .section-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.2rem; }
+  .bar-chart { display: flex; align-items: flex-end; gap: 10px; height: 140px; }
+  .bar-group { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
+  .bar-wrap { width: 100%; display: flex; align-items: flex-end; justify-content: center; height: 110px; }
+  .bar {
+    width: 60%; background: var(--accent); border-radius: 5px 5px 0 0;
+    transition: height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative;
+  }
+  .bar:hover::after {
+    content: attr(data-val); position: absolute; top: -26px; left: 50%;
+    transform: translateX(-50%); background: var(--surface2); border: 0.5px solid var(--border);
+    border-radius: 5px; padding: 3px 7px; font-size: 11px; color: var(--text);
+    white-space: nowrap; pointer-events: none;
+  }
+  .bar-label { font-size: 11px; color: var(--muted); text-align: center; }
+  .table-box {
+    background: var(--surface); border: 0.5px solid var(--border); border-radius: 14px;
+    padding: 1.5rem; overflow-x: auto; margin-bottom: 1.8rem;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 580px; }
+  th {
+    font-size: 10px; color: var(--muted); font-weight: 400; text-transform: uppercase;
+    letter-spacing: 0.07em; padding: 6px 10px; border-bottom: 0.5px solid var(--border); text-align: right;
+  }
+  th:first-child { text-align: left; }
+  td { padding: 11px 10px; border-bottom: 0.5px solid rgba(255,255,255,0.04); text-align: right; color: #bbb; }
+  td:first-child { text-align: left; color: #888; }
+  tr:last-child td { border-bottom: none; }
+  .badge { display: inline-block; font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 500; }
+  .badge-red { background: var(--danger-dim); color: #e05c5c; border: 0.5px solid rgba(192,57,43,0.2); }
+  .badge-green { background: var(--accent-dim); color: var(--accent); border: 0.5px solid rgba(61,153,112,0.2); }
+  .badge-admin { background: rgba(201,168,76,0.12); color: var(--gold); border: 0.5px solid rgba(201,168,76,0.25); font-size: 10px; padding: 2px 7px; border-radius: 4px; }
+  .timestamp { font-size: 11px; color: #2a3038; text-align: right; margin-top: 0.8rem; }
+  .spinner {
+    width: 32px; height: 32px; border: 2px solid rgba(61,153,112,0.2);
+    border-top-color: var(--accent); border-radius: 50%;
+    animation: spin 0.8s linear infinite; margin: 4rem auto; display: block;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-view { text-align: center; padding: 4rem 2rem; }
+  .loading-view p { color: var(--muted); font-size: 13px; margin-top: 1rem; }
+  @media (max-width: 600px) {
+    main { padding: 1.5rem 1rem; }
+    .cards { grid-template-columns: repeat(2, 1fr); }
+    .login-card { width: 92vw; padding: 1.8rem; }
+  }
 </style>
 </head>
 <body>
@@ -88,7 +180,10 @@
     <p class="login-sub">Sign in to view your utility account</p>
     <div class="error-msg" id="error-msg">Incorrect email or password.</div>
     <div class="loading-msg" id="loading-msg">Loading your account…</div>
-    <div class="field"><label class="field-label">Email address</label><input type="email" id="email-input" placeholder="you@email.com" autocomplete="email"/></div>
+    <div class="field">
+      <label class="field-label">Email address</label>
+      <input type="email" id="email-input" placeholder="you@email.com" autocomplete="email"/>
+    </div>
     <div class="field">
       <label class="field-label">Password</label>
       <div style="position:relative">
@@ -99,7 +194,9 @@
       </div>
     </div>
     <button class="btn-login" id="login-btn">Sign in</button>
-    <p style="text-align:center;margin-top:1rem"><a href="#" id="forgot-link" style="color:var(--accent);font-size:13px;text-decoration:none">Forgot password?</a></p>
+    <p style="text-align:center;margin-top:1rem">
+      <a href="#" id="forgot-link" style="color:var(--accent);font-size:13px;text-decoration:none">Forgot password?</a>
+    </p>
     <div id="forgot-msg" style="display:none;margin-top:0.5rem;font-size:13px;padding:8px 12px;border-radius:6px;text-align:center"></div>
   </div>
 </div>
@@ -108,7 +205,9 @@
   <nav>
     <div class="nav-inner">
       <div class="nav-brand">
-        <div class="nav-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#3d9970" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
+        <div class="nav-icon">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#3d9970" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        </div>
         <span class="nav-title">Property Portal</span>
         <span class="badge-admin" id="admin-badge" style="display:none">Admin</span>
       </div>
@@ -118,7 +217,9 @@
       </div>
     </div>
   </nav>
-  <main id="main-content"><div class="loading-view"><span class="spinner"></span><p>Fetching your data…</p></div></main>
+  <main id="main-content">
+    <div class="loading-view"><span class="spinner"></span><p>Fetching your data…</p></div>
+  </main>
 </div>
 
 <script>
@@ -127,6 +228,7 @@ const API_KEY      = 'AIzaSyAORZ8PWN4dnt06w8JPbi_dVlS9dJ3ZqW0';
 const SUPABASE_URL = 'https://aymkbgkoralmgznfynnz.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_jewDtFZIL6IcF_6KLBaf8A_uets21aw';
 const ADMIN_EMAIL  = 'admin@property.com';
+const UNIT_TAB_MAP = {};
 
 const ALL_UNITS = [
   {unit:'D101',name:'Mellon Achieng Otieno'},{unit:'D102',name:'Daniel Njuguna'},
@@ -154,102 +256,106 @@ const ALL_UNITS = [
   {unit:'D805',name:'Herina Ventures'},{unit:'D806',name:'Joshua Ligare'},
 ];
 
-// ── FETCH SHEET ──────────────────────────────
 async function fetchSheet(sheetName) {
   const name = sheetName.trim();
-  // Use single quotes around sheet name to handle dots and spaces
-  // Do NOT encode the single quotes — pass them raw in the URL
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/'${name}'!A1:Z1000?key=${API_KEY}&valueRenderOption=FORMATTED_VALUE`;
+  const range = encodeURIComponent(name) + '!A1:Z1000';
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?key=${API_KEY}&valueRenderOption=FORMATTED_VALUE`;
   const res = await fetch(url);
-  if (!res.ok) {
-    // Fallback: try without quotes
-    const url2 = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(name)}!A1:Z1000?key=${API_KEY}&valueRenderOption=FORMATTED_VALUE`;
-    const res2 = await fetch(url2);
-    if (!res2.ok) throw new Error(`Sheet not found: ${name}`);
-    return (await res2.json()).values || [];
+  if (!res.ok) throw new Error(`Failed to fetch sheet: ${name} (${res.status})`);
+  return (await res.json()).values || [];
+}
   }
   return (await res.json()).values || [];
 }
 
-// ── PARSE ────────────────────────────────────
-function parseKsh(val, allowNeg) {
+function parseKsh(val, allowNegative) {
   if (!val) return 0;
-  const s = val.toString().replace(/,/g,'').replace(/[^0-9.\-]/g,'');
-  const n = parseFloat(s);
+  const str = val.toString().replace(/,/g, '').replace(/[^0-9.\-]/g, '');
+  const n = parseFloat(str);
   if (isNaN(n)) return 0;
-  return allowNeg ? n : Math.abs(n);
+  return allowNegative ? n : Math.abs(n);
 }
 
 function parseSheet(rows, unitName, ownerName) {
-  const MONTH_RE = /^(january|february|march|april|may|june|july|august|september|october|november|december)[\s\-–]?\d{2}/i;
   const months = [];
   let currentMonth = null;
   let waterBF = 0, serviceBF = 0;
-  let pendingW = 0, pendingS = 0, pendingP = 0;
+  let pendingWater = 0, pendingService = 0, pendingPayment = 0;
 
-  // Detect water/service column positions from first header row
+  const MONTH_RE = /^(january|february|march|april|may|june|july|august|september|october|november|december)[\s\-–]?\d{2}/i;
+
+  // Auto-detect water/service columns from FIRST "water bill" header
   let wCol = 3, sCol = 4, tCol = 5;
   for (let i = 0; i < rows.length; i++) {
-    const r = rows[i].map(c=>(c||'').toString().trim().toLowerCase());
+    const r = rows[i].map(c => (c||'').toString().trim().toLowerCase());
     for (let j = 0; j < r.length; j++) {
-      if (r[j].includes('water bill')) { wCol=j; sCol=j+1; tCol=j+2; break; }
+      if (r[j].includes('water bill')) { wCol = j; sCol = j+1; tCol = j+2; break; }
     }
     if (wCol !== 3) break;
   }
 
   for (let i = 0; i < rows.length; i++) {
-    const raw = rows[i].map(c=>(c||'').toString().trim());
-    const txt = raw.join(' ').toLowerCase();
+    const row = rows[i].map(c => (c||'').toString().trim());
+    const fullText = row.join(' ').toLowerCase();
 
-    // Opening balance (before any months)
-    if ((txt.includes('bal b/f')||txt.includes('bal b/d')) && months.length===0) {
-      waterBF   = parseKsh(raw[wCol]||raw[wCol-1]||'0', true);
-      serviceBF = parseKsh(raw[sCol]||raw[sCol-1]||'0', true);
+    // Opening balance
+    if ((fullText.includes('bal b/f') || fullText.includes('bal b/d')) && months.length === 0) {
+      waterBF   = parseKsh(row[wCol] || row[wCol-1] || '0', true);
+      serviceBF = parseKsh(row[sCol] || row[sCol-1] || '0', true);
       continue;
     }
 
-    // Charges row — may come BEFORE month label in some sheets
-    if ((txt.includes('water and service')||txt.includes('water & service')) &&
-        !txt.includes('closing') && !txt.includes('sum total')) {
-      const w = parseKsh(raw[wCol]||'0');
-      const s = parseKsh(raw[sCol]||'0');
+    // Charges row — capture as pending if no current month yet, or assign directly
+    if ((fullText.includes('water and service') || fullText.includes('water & service')) &&
+        !fullText.includes('closing') && !fullText.includes('sum')) {
+      const w = parseKsh(row[wCol] || '0');
+      const s = parseKsh(row[sCol] || '0');
       if (currentMonth) {
         if (w > 0) currentMonth.water = w;
         if (s > 0) currentMonth.service = s;
       } else {
-        if (w > 0) pendingW = w;
-        if (s > 0) pendingS = s;
+        if (w > 0) pendingWater = w;
+        if (s > 0) pendingService = s;
       }
       continue;
     }
 
-    // Payment row — negative values = payments
-    if (txt.includes('payment') && !txt.includes('closing') &&
-        !txt.includes('sum') && !txt.includes('total bal') && !txt.includes('bal b')) {
-      for (let j = Math.max(0,wCol-1); j <= tCol; j++) {
-        if (!raw[j]) continue;
-        if (raw[j].includes('-')) {
-          const p = parseKsh(raw[j]);
-          if (p > 0) { if (currentMonth) currentMonth.payment += p; else pendingP += p; }
+    // Payment row (before month label) — capture as pending
+    if (fullText.includes('payment') && !fullText.includes('closing') &&
+        !fullText.includes('total bal') && !fullText.includes('sum') && !fullText.includes('bal b')) {
+      // Look for negative values indicating payments
+      for (let j = wCol - 1; j <= tCol; j++) {
+        if (!row[j]) continue;
+        const raw = row[j].toString();
+        if (raw.includes('-')) {
+          const p = parseKsh(raw);
+          if (p > 0) {
+            if (currentMonth) currentMonth.payment += p;
+            else pendingPayment += p;
+          }
         }
       }
     }
 
-    // Month label row
-    const mCell = [raw[0],raw[1],raw[2]].find(c=>MONTH_RE.test(c));
-    if (mCell) {
-      const existing = months.find(m=>m.month.toLowerCase()===mCell.toLowerCase());
+    // Detect month label row
+    const monthCell = [row[0], row[1], row[2]].find(c => MONTH_RE.test(c));
+    if (monthCell) {
+      // Check if month already exists (avoid duplicate from 2nd quarter header)
+      const existing = months.find(m => m.month.toLowerCase() === monthCell.toLowerCase());
       if (existing) { currentMonth = existing; continue; }
+
       const prev = months.length > 0 ? months[months.length-1] : null;
       currentMonth = {
-        month: mCell,
-        water: pendingW, service: pendingS,
-        waterBF:   prev ? prev.waterClosing   : waterBF,
+        month: monthCell,
+        water: pendingWater,
+        service: pendingService,
+        waterBF: prev ? prev.waterClosing : waterBF,
         serviceBF: prev ? prev.serviceClosing : serviceBF,
         waterClosing: 0, serviceClosing: 0,
-        payment: pendingP, balance: 0,
+        payment: pendingPayment,
+        balance: 0,
       };
-      pendingW=0; pendingS=0; pendingP=0;
+      pendingWater = 0; pendingService = 0; pendingPayment = 0;
       months.push(currentMonth);
       continue;
     }
@@ -257,58 +363,62 @@ function parseSheet(rows, unitName, ownerName) {
     if (!currentMonth) continue;
 
     // Closing balance
-    if (txt.includes('closing') && txt.includes('balance')) {
-      currentMonth.waterClosing   = parseKsh(raw[wCol]||'0', true);
-      currentMonth.serviceClosing = parseKsh(raw[sCol]||'0', true);
-      const tc = parseKsh(raw[tCol]||'0', true);
+    if (fullText.includes('closing balance') || (fullText.includes('closing') && fullText.includes('balance'))) {
+      currentMonth.waterClosing   = parseKsh(row[wCol] || '0', true);
+      currentMonth.serviceClosing = parseKsh(row[sCol] || '0', true);
+      const tc = parseKsh(row[tCol] || '0', true);
       currentMonth.balance = Math.abs(tc) || Math.abs(currentMonth.waterClosing + currentMonth.serviceClosing);
     }
   }
-  return { unit:unitName, name:ownerName, months, waterBF, serviceBF };
+
+  return { unit: unitName, name: ownerName, months, waterBF, serviceBF };
 }
 
 function fmt(n) {
-  if (n<0) return '<span style="color:var(--accent)">Credit KSh '+Number(Math.abs(n)).toLocaleString('en-KE',{minimumFractionDigits:2})+'</span>';
-  return 'KSh '+Number(n).toLocaleString('en-KE',{minimumFractionDigits:2});
+  if (n < 0) return '<span style="color:var(--accent)">Credit KSh ' + Number(Math.abs(n)).toLocaleString('en-KE',{minimumFractionDigits:2}) + '</span>';
+  return 'KSh ' + Number(n).toLocaleString('en-KE',{minimumFractionDigits:2});
 }
 
 async function fetchLastUpdated() {
-  try { const r=await fetchSheet('LastUpdated'); return r[0]?.[0]||'N/A'; }
+  try { const rows = await fetchSheet('LastUpdated'); return rows[0]?.[0] || 'N/A'; }
   catch { return new Date().toLocaleDateString('en-KE',{day:'numeric',month:'long',year:'numeric'}); }
 }
 
-// ── RENDER HOMEOWNER ─────────────────────────
 function renderHomeowner(data, lastUpdated) {
   const months = data.months;
-  if (!months.length) return `<p style="color:var(--muted);padding:2rem 0">No data found. Please contact your property manager.</p>`;
+  if (!months.length) return `<p style="color:var(--muted);padding:2rem 0">No data found for your unit. Please contact your property manager.</p>`;
 
-  let idx = months.length-1;
-  if (months.length>1) {
-    const last=months[months.length-1];
-    if (last.water===0&&last.service===0&&last.payment===0&&last.balance===0) idx=months.length-2;
+  let latestIdx = months.length - 1;
+  if (months.length > 1) {
+    const last = months[months.length-1];
+    if (last.water===0 && last.service===0 && last.payment===0 && last.balance===0) latestIdx = months.length-2;
   }
-  const latest=months[idx], prev=idx>0?months[idx-1]:null;
-  const wSub=latest.waterBF+latest.water, sSub=latest.serviceBF+latest.service;
-  const grand=wSub+sSub;
-  const outstanding=latest.balance>0?latest.balance:(grand>0&&latest.water===0&&latest.service===0?grand:latest.balance);
-  const hasBal=outstanding>0;
+  const latest = months[latestIdx];
+  const prev   = latestIdx > 0 ? months[latestIdx-1] : null;
 
-  let insight='';
-  if (prev&&prev.water>0) {
-    const d=latest.water-prev.water, pct=Math.round(Math.abs(d)/prev.water*100);
-    if (d>0) insight=`Your water bill increased by ${pct}% vs ${prev.month}. Check for leaks.`;
-    else if (d<0) insight=`Your water bill decreased by ${pct}% vs ${prev.month}. Great job!`;
-    else insight=`Your water bill is unchanged from ${prev.month}.`;
+  const waterSubtotal   = latest.waterBF + latest.water;
+  const serviceSubtotal = latest.serviceBF + latest.service;
+  const grandTotal      = waterSubtotal + serviceSubtotal;
+  const outstandingAmount = latest.balance > 0 ? latest.balance : (grandTotal > 0 && latest.water===0 && latest.service===0 ? grandTotal : latest.balance);
+  const hasBalance = outstandingAmount > 0;
+
+  let insightText = '';
+  if (prev && prev.water > 0) {
+    const diff = latest.water - prev.water;
+    const pct  = Math.round(Math.abs(diff)/prev.water*100);
+    if (diff > 0)      insightText = `Your water bill increased by ${pct}% compared to ${prev.month}. Consider checking for any leaks or unusual usage.`;
+    else if (diff < 0) insightText = `Your water bill decreased by ${pct}% compared to ${prev.month}. Good job managing your water usage.`;
+    else               insightText = `Your water bill is unchanged from ${prev.month}.`;
   }
 
-  const maxW=Math.max(...months.map(m=>m.water),1);
-  const bars=months.map(m=>{
-    const h=Math.max(Math.round((m.water/maxW)*100),2);
-    const lbl=m.month.replace(/[-– ]\d{2}$/,'').substring(0,3);
-    return `<div class="bar-group"><div class="bar-wrap"><div class="bar" style="height:${h}%" title="${fmt(m.water)}"></div></div><div class="bar-label">${lbl}</div></div>`;
+  const maxWater = Math.max(...months.map(m=>m.water),1);
+  const bars = months.map(m => {
+    const h = Math.max(Math.round((m.water/maxWater)*100),2);
+    const label = m.month.replace(/[-– ]\d{2}$/,'').substring(0,3);
+    return `<div class="bar-group"><div class="bar-wrap"><div class="bar" style="height:${h}%" data-val="${fmt(m.water)}"></div></div><div class="bar-label">${label}</div></div>`;
   }).join('');
 
-  const tRows=[...months].reverse().map(m=>`
+  const tableRows = [...months].reverse().map(m => `
     <tr>
       <td>${m.month}</td>
       <td>${fmt(m.waterBF)}</td><td>${fmt(m.water)}</td><td>${fmt(m.waterBF+m.water)}</td>
@@ -317,59 +427,116 @@ function renderHomeowner(data, lastUpdated) {
       <td style="color:${m.balance>0?'#e05c5c':'var(--accent)'};font-weight:500">${fmt(m.balance)}</td>
     </tr>`).join('');
 
-  const mpesa=hasBal?`
-    <div style="background:var(--surface);border:0.5px solid rgba(61,153,112,0.2);border-radius:14px;padding:1.5rem;margin-bottom:1.8rem">
-      <div class="section-label" style="margin-bottom:1rem">Pay via M-Pesa</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:1rem">
-        <div style="background:var(--surface2);border-radius:8px;padding:0.9rem 1rem"><div class="card-label">Paybill</div><div style="font-size:18px;font-weight:500;color:var(--text);font-family:'DM Serif Display',serif">522522</div></div>
-        <div style="background:var(--surface2);border-radius:8px;padding:0.9rem 1rem"><div class="card-label">Account</div><div style="font-size:18px;font-weight:500;color:var(--text);font-family:'DM Serif Display',serif">1313544337</div></div>
-        <div style="background:var(--surface2);border-radius:8px;padding:0.9rem 1rem"><div class="card-label">Amount</div><div style="font-size:18px;font-weight:500;color:var(--accent);font-family:'DM Serif Display',serif">${fmt(outstanding)}</div></div>
-      </div>
-      <button onclick="copyMpesa(${outstanding})" style="background:var(--accent);border:none;border-radius:8px;color:#fff;font-size:13px;padding:10px 18px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500" id="copy-mpesa-btn">Copy payment details</button>
-      <p style="font-size:11px;color:var(--muted);margin-top:10px">M-Pesa → Lipa na M-Pesa → Pay Bill</p>
-    </div>`:''
-
   return `
-    <div class="page-header" style="margin-bottom:2.2rem">
+    <div class="page-header">
       <p class="page-eyebrow">Welcome back</p>
       <h1 class="page-title">${data.name}</h1>
-      <p style="color:var(--muted);font-size:12px;margin-top:-1.5rem">Unit ${data.unit} &nbsp;·&nbsp; ${latest.month}</p>
+      <p style="color:var(--muted);font-size:12px;margin-top:6px">Unit ${data.unit} &nbsp;·&nbsp; ${latest.month}</p>
     </div>
-    ${hasBal?`<div class="alert alert-danger"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>Outstanding balance: <strong>${fmt(outstanding)}</strong>. Please pay at your earliest convenience.</span></div>`:`<div class="alert alert-success"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Your account is fully cleared. No outstanding balance.</span></div>`}
+
+    ${hasBalance ? `
+    <div class="alert alert-danger">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>You have an outstanding balance of <strong>${fmt(outstandingAmount)}</strong>. Please make payment at your earliest convenience.</span>
+    </div>` : `
+    <div class="alert alert-success">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Your account is fully cleared. No outstanding balance.</span>
+    </div>`}
+
     <div class="chart-box" style="margin-bottom:1.8rem">
       <div class="section-label" style="margin-bottom:1.4rem">Bill breakdown — ${latest.month}</div>
       <div style="margin-bottom:1px">
-        <div style="background:rgba(61,153,112,0.06);border:0.5px solid rgba(61,153,112,0.15);border-radius:10px 10px 0 0;padding:8px 1.3rem"><span style="font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:0.08em;font-weight:500">Water</span></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)">
-          <div style="background:var(--surface2);padding:1rem 1.3rem"><div class="card-label">Balance b/f</div><div class="card-value" style="font-size:17px">${fmt(latest.waterBF)}</div></div>
-          <div style="background:var(--surface2);padding:1rem 1.3rem"><div class="card-label">${latest.month} bill</div><div class="card-value" style="font-size:17px">${fmt(latest.water)}</div></div>
+        <div style="background:rgba(61,153,112,0.06);border:0.5px solid rgba(61,153,112,0.15);border-radius:10px 10px 0 0;padding:8px 1.3rem">
+          <span style="font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:0.08em;font-weight:500">Water</span>
         </div>
-        <div style="background:var(--surface);border:0.5px solid rgba(61,153,112,0.15);border-top:none;padding:0.9rem 1.3rem;display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;color:var(--muted);text-transform:uppercase">Water subtotal</span><span style="font-family:'DM Serif Display',serif;font-size:17px">${fmt(wSub)}</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)">
+          <div style="background:var(--surface2);padding:1rem 1.3rem">
+            <div class="card-label">Balance b/f</div>
+            <div class="card-value" style="font-size:17px">${fmt(latest.waterBF)}</div>
+          </div>
+          <div style="background:var(--surface2);padding:1rem 1.3rem">
+            <div class="card-label">${latest.month} bill</div>
+            <div class="card-value" style="font-size:17px">${fmt(latest.water)}</div>
+          </div>
+        </div>
+        <div style="background:var(--surface);border:0.5px solid rgba(61,153,112,0.15);border-top:none;padding:0.9rem 1.3rem;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em">Water subtotal</span>
+          <span style="font-family:'DM Serif Display',serif;font-size:17px;color:var(--text)">${fmt(waterSubtotal)}</span>
+        </div>
       </div>
       <div style="margin-top:10px;margin-bottom:1px">
-        <div style="background:rgba(201,168,76,0.06);border:0.5px solid rgba(201,168,76,0.15);border-radius:10px 10px 0 0;padding:8px 1.3rem"><span style="font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:0.08em;font-weight:500">Service Charge</span></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)">
-          <div style="background:var(--surface2);padding:1rem 1.3rem"><div class="card-label">Balance b/f</div><div class="card-value" style="font-size:17px">${fmt(latest.serviceBF)}</div></div>
-          <div style="background:var(--surface2);padding:1rem 1.3rem"><div class="card-label">${latest.month} bill</div><div class="card-value" style="font-size:17px">${fmt(latest.service)}</div></div>
+        <div style="background:rgba(201,168,76,0.06);border:0.5px solid rgba(201,168,76,0.15);border-radius:10px 10px 0 0;padding:8px 1.3rem">
+          <span style="font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:0.08em;font-weight:500">Service Charge</span>
         </div>
-        <div style="background:var(--surface);border:0.5px solid rgba(201,168,76,0.15);border-top:none;padding:0.9rem 1.3rem;display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;color:var(--muted);text-transform:uppercase">Service subtotal</span><span style="font-family:'DM Serif Display',serif;font-size:17px">${fmt(sSub)}</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)">
+          <div style="background:var(--surface2);padding:1rem 1.3rem">
+            <div class="card-label">Balance b/f</div>
+            <div class="card-value" style="font-size:17px">${fmt(latest.serviceBF)}</div>
+          </div>
+          <div style="background:var(--surface2);padding:1rem 1.3rem">
+            <div class="card-label">${latest.month} bill</div>
+            <div class="card-value" style="font-size:17px">${fmt(latest.service)}</div>
+          </div>
+        </div>
+        <div style="background:var(--surface);border:0.5px solid rgba(201,168,76,0.15);border-top:none;padding:0.9rem 1.3rem;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em">Service subtotal</span>
+          <span style="font-family:'DM Serif Display',serif;font-size:17px;color:var(--text)">${fmt(serviceSubtotal)}</span>
+        </div>
       </div>
       <div style="background:var(--surface);border:0.5px solid rgba(61,153,112,0.25);border-radius:10px;padding:1.1rem 1.3rem;margin-top:10px;display:flex;justify-content:space-between;align-items:center">
-        <div><div class="card-label">Grand total payable</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Water + Service</div></div>
-        <div class="card-value" style="font-size:22px;color:var(--accent)">${fmt(latest.balance>0?latest.balance:grand)}</div>
+        <div>
+          <div class="card-label">Grand total payable</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">Water + Service subtotals</div>
+        </div>
+        <div class="card-value" style="font-size:22px;color:var(--accent)">${fmt(latest.balance>0?latest.balance:grandTotal)}</div>
       </div>
       <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:10px;padding:1.1rem 1.3rem;margin-top:2px;display:flex;justify-content:space-between;align-items:center">
         <div class="card-label">Payment received</div>
         <div class="card-value" style="font-size:20px;color:var(--accent)">${fmt(latest.payment)}</div>
       </div>
-      <div style="background:var(--surface);border:0.5px solid ${hasBal?'rgba(192,57,43,0.25)':'rgba(61,153,112,0.2)'};border-radius:10px;padding:1.1rem 1.3rem;margin-top:2px;display:flex;justify-content:space-between;align-items:center">
-        <div><div class="card-label">Closing balance</div><div style="font-size:11px;color:var(--muted);margin-top:2px">${hasBal?'Amount outstanding':'Fully cleared'}</div></div>
-        <div class="card-value" style="font-size:22px;color:${hasBal?'#e05c5c':'var(--accent)'}">${fmt(outstanding)}</div>
+      <div style="background:var(--surface);border:0.5px solid ${hasBalance?'rgba(192,57,43,0.25)':'rgba(61,153,112,0.2)'};border-radius:10px;padding:1.1rem 1.3rem;margin-top:2px;display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div class="card-label">Closing balance</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">${hasBalance?'Amount outstanding':'Fully cleared'}</div>
+        </div>
+        <div class="card-value" style="font-size:22px;color:${hasBalance?'#e05c5c':'var(--accent)'}">${fmt(outstandingAmount)}</div>
       </div>
     </div>
-    ${mpesa}
-    ${insight?`<div class="insight"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3d9970" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><p>${insight}</p></div>`:''}
-    <div class="chart-box"><div class="section-label">Water bill trend</div><div class="bar-chart">${bars}</div></div>
+
+    ${hasBalance ? `
+    <div style="background:var(--surface);border:0.5px solid rgba(61,153,112,0.2);border-radius:14px;padding:1.5rem;margin-bottom:1.8rem">
+      <div class="section-label" style="margin-bottom:1rem">Pay via M-Pesa</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:1rem">
+        <div style="background:var(--surface2);border-radius:8px;padding:0.9rem 1rem">
+          <div class="card-label">Paybill</div>
+          <div style="font-size:18px;font-weight:500;color:var(--text);font-family:'DM Serif Display',serif">522522</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:8px;padding:0.9rem 1rem">
+          <div class="card-label">Account number</div>
+          <div style="font-size:18px;font-weight:500;color:var(--text);font-family:'DM Serif Display',serif">1313544337</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:8px;padding:0.9rem 1rem">
+          <div class="card-label">Amount</div>
+          <div style="font-size:18px;font-weight:500;color:var(--accent);font-family:'DM Serif Display',serif">${fmt(outstandingAmount)}</div>
+        </div>
+      </div>
+      <button onclick="copyMpesa('522522','1313544337','${outstandingAmount}')" style="background:var(--accent);border:none;border-radius:8px;color:#fff;font-size:13px;padding:10px 18px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500" id="copy-mpesa-btn">
+        Copy payment details
+      </button>
+      <p style="font-size:11px;color:var(--muted);margin-top:10px">Go to M-Pesa → Lipa na M-Pesa → Pay Bill → enter details above</p>
+    </div>` : ''}
+
+    ${insightText ? `<div class="insight">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3d9970" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <p>${insightText}</p>
+    </div>` : ''}
+
+    <div class="chart-box">
+      <div class="section-label">Water bill trend</div>
+      <div class="bar-chart">${bars}</div>
+    </div>
+
     <div class="table-box">
       <div class="section-label">Transaction history</div>
       <table>
@@ -381,35 +548,50 @@ function renderHomeowner(data, lastUpdated) {
             <th rowspan="2" style="vertical-align:bottom">Payment</th>
             <th rowspan="2" style="vertical-align:bottom">Balance</th>
           </tr>
-          <tr><th>B/f</th><th>Current</th><th>Subtotal</th><th>B/f</th><th>Current</th><th>Subtotal</th></tr>
+          <tr>
+            <th>B/f</th><th>Current</th><th>Subtotal</th>
+            <th>B/f</th><th>Current</th><th>Subtotal</th>
+          </tr>
         </thead>
-        <tbody>${tRows}</tbody>
+        <tbody>${tableRows}</tbody>
       </table>
     </div>
+
     <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1.8rem">
       <div class="section-label" style="margin-bottom:1rem">Change password</div>
       <div id="pwd-msg" style="display:none;margin-bottom:0.8rem;font-size:13px;padding:8px 12px;border-radius:6px"></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-        <div><label class="field-label">New password</label><input type="password" id="new-pwd" placeholder="New password" style="width:100%;background:var(--bg);border:0.5px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none"/></div>
-        <div><label class="field-label">Confirm password</label><input type="password" id="confirm-pwd" placeholder="Confirm password" style="width:100%;background:var(--bg);border:0.5px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none"/></div>
+        <div>
+          <label class="field-label">New password</label>
+          <input type="password" id="new-pwd" placeholder="New password" style="width:100%;background:var(--bg);border:0.5px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none"/>
+        </div>
+        <div>
+          <label class="field-label">Confirm password</label>
+          <input type="password" id="confirm-pwd" placeholder="Confirm password" style="width:100%;background:var(--bg);border:0.5px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none"/>
+        </div>
       </div>
-      <button onclick="changePassword()" style="background:var(--surface2);border:0.5px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--text);font-size:13px;padding:10px 18px;cursor:pointer;font-family:'DM Sans',sans-serif">Update password</button>
+      <button onclick="changePassword()" style="background:var(--surface2);border:0.5px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--text);font-size:13px;padding:10px 18px;cursor:pointer;font-family:'DM Sans',sans-serif">
+        Update password
+      </button>
       <p style="font-size:11px;color:var(--muted);margin-top:8px">Password is saved securely and works on all devices.</p>
     </div>
-    <p class="timestamp">Last updated: ${lastUpdated}</p>`;
+
+    <p class="timestamp">Last updated: ${lastUpdated}</p>
+  `;
 }
 
-// ── RENDER ADMIN ─────────────────────────────
 function renderAdmin(allData, lastUpdated) {
-  const rows=allData.map(d=>{
+  const rows = allData.map(d => {
     if (!d.months.length) return null;
-    const l=d.months[d.months.length-1];
-    return {unit:d.unit,name:d.name,month:l.month,water:l.water,service:l.service,total:l.water+l.service,payment:l.payment,balance:l.balance};
+    const l = d.months[d.months.length-1];
+    return { unit:d.unit, name:d.name, month:l.month, water:l.water, service:l.service, total:l.water+l.service, payment:l.payment, balance:l.balance };
   }).filter(Boolean);
-  const totalOut=rows.reduce((s,r)=>s+r.balance,0);
-  const withBal=rows.filter(r=>r.balance>0).length;
-  const collected=rows.reduce((s,r)=>s+r.payment,0);
-  const tRows=rows.map(r=>`
+
+  const totalOutstanding = rows.reduce((s,r)=>s+r.balance,0);
+  const unitsWithBalance = rows.filter(r=>r.balance>0).length;
+  const totalCollected   = rows.reduce((s,r)=>s+r.payment,0);
+
+  const tableRows = rows.map(r=>`
     <tr>
       <td style="color:var(--accent);font-weight:500;text-align:left">${r.unit}</td>
       <td style="text-align:left;color:#bbb">${r.name}</td>
@@ -419,95 +601,133 @@ function renderAdmin(allData, lastUpdated) {
       <td style="color:${r.balance>0?'#e05c5c':'var(--accent)'};font-weight:500">${fmt(r.balance)}</td>
       <td style="text-align:left"><span class="badge ${r.balance>0?'badge-red':'badge-green'}">${r.balance>0?'Outstanding':'Cleared'}</span></td>
     </tr>`).join('');
+
   return `
-    <div class="page-header" style="margin-bottom:2.2rem">
+    <div class="page-header">
       <p class="page-eyebrow">Admin overview</p>
       <h1 class="page-title">All Units — ${rows[0]?.month||''}</h1>
     </div>
     <div class="cards">
       <div class="card"><div class="card-label">Total units</div><div class="card-value">${rows.length}</div><div class="card-sub">Active</div></div>
-      <div class="card"><div class="card-label">Units with balance</div><div class="card-value ${withBal>0?'red':'green'}">${withBal}</div><div class="card-sub">${withBal>0?'Need attention':'All clear'}</div></div>
-      <div class="card"><div class="card-label">Total outstanding</div><div class="card-value ${totalOut>0?'red':'green'}">${fmt(totalOut)}</div><div class="card-sub">This month</div></div>
-      <div class="card"><div class="card-label">Payments received</div><div class="card-value green">${fmt(collected)}</div><div class="card-sub">This month</div></div>
+      <div class="card"><div class="card-label">Units with balance</div><div class="card-value ${unitsWithBalance>0?'red':'green'}">${unitsWithBalance}</div><div class="card-sub">${unitsWithBalance>0?'Need attention':'All clear'}</div></div>
+      <div class="card"><div class="card-label">Total outstanding</div><div class="card-value ${totalOutstanding>0?'red':'green'}">${fmt(totalOutstanding)}</div><div class="card-sub">This month</div></div>
+      <div class="card"><div class="card-label">Payments received</div><div class="card-value green">${fmt(totalCollected)}</div><div class="card-sub">This month</div></div>
     </div>
     <div class="table-box">
       <div class="section-label">Unit summary</div>
       <table>
-        <thead><tr><th style="text-align:left">Unit</th><th style="text-align:left">Homeowner</th><th>Water</th><th>Service</th><th>Total</th><th>Payment</th><th>Balance</th><th style="text-align:left">Status</th></tr></thead>
-        <tbody>${tRows}</tbody>
+        <thead><tr>
+          <th style="text-align:left">Unit</th><th style="text-align:left">Homeowner</th>
+          <th>Water</th><th>Service</th><th>Total</th>
+          <th>Payment</th><th>Balance</th><th style="text-align:left">Status</th>
+        </tr></thead>
+        <tbody>${tableRows}</tbody>
       </table>
     </div>
-    <p class="timestamp">Last updated: ${lastUpdated}</p>`;
+    <p class="timestamp">Last updated: ${lastUpdated}</p>
+  `;
 }
 
-// ── HELPERS ───────────────────────────────────
-function togglePwd(){const i=document.getElementById('password-input'),ic=document.getElementById('eye-icon');if(i.type==='password'){i.type='text';ic.innerHTML='<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';}else{i.type='password';ic.innerHTML='<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';}}
-
-function copyMpesa(amount){const t=`Paybill: 522522\nAccount: 1313544337\nAmount: KSh ${Number(amount).toLocaleString()}`;navigator.clipboard.writeText(t).then(()=>{const b=document.getElementById('copy-mpesa-btn');if(b){b.textContent='Copied!';setTimeout(()=>b.textContent='Copy payment details',2000);}}).catch(()=>alert(t));}
-
-async function changePassword(){
-  const np=document.getElementById('new-pwd').value,cp=document.getElementById('confirm-pwd').value,m=document.getElementById('pwd-msg');
-  const show=(msg,ok)=>{m.style.display='block';m.style.background=ok?'rgba(61,153,112,0.1)':'rgba(192,57,43,0.1)';m.style.color=ok?'#6dbf9a':'#e07070';m.textContent=msg;};
-  if(!np||np.length<6){show('Password must be at least 6 characters.');return;}
-  if(np!==cp){show('Passwords do not match.');return;}
-  try{
-    const r=await fetch(SUPABASE_URL+'/auth/v1/user',{method:'PUT',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+currentUser.token},body:JSON.stringify({password:np})});
-    const d=await r.json();
-    if(d.id||d.email){show('Password updated successfully!',true);document.getElementById('new-pwd').value='';document.getElementById('confirm-pwd').value='';}
-    else throw new Error(d.message||'Failed');
-  }catch(e){show('Error: '+e.message);}
+function togglePwd() {
+  const inp = document.getElementById('password-input');
+  const icon = document.getElementById('eye-icon');
+  if (inp.type==='password') {
+    inp.type='text';
+    icon.innerHTML='<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+  } else {
+    inp.type='password';
+    icon.innerHTML='<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+  }
 }
 
-// ── AUTH ──────────────────────────────────────
-let currentUser=null;
-const SS='pp_session';
-function saveSession(u){localStorage.setItem(SS,JSON.stringify(u));}
-function clearSession(){localStorage.removeItem(SS);}
-function getSession(){try{return JSON.parse(localStorage.getItem(SS));}catch{return null;}}
+function copyMpesa(paybill, account, amount) {
+  const text = `Paybill: 522522\nAccount: 1313544337\nAmount: KSh ${Number(amount).toLocaleString()}`;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-mpesa-btn');
+    if (btn) { btn.textContent='Copied!'; setTimeout(()=>btn.textContent='Copy payment details',2000); }
+  }).catch(() => alert(`Paybill: ${paybill}\nAccount: ${account}\nAmount: KSh ${Number(amount).toLocaleString()}`));
+}
+
+async function changePassword() {
+  const newPwd=document.getElementById('new-pwd').value;
+  const confirmPwd=document.getElementById('confirm-pwd').value;
+  const msgEl=document.getElementById('pwd-msg');
+  if (!newPwd||newPwd.length<6) {
+    msgEl.style.display='block'; msgEl.style.background='rgba(192,57,43,0.1)';
+    msgEl.style.color='#e07070'; msgEl.textContent='Password must be at least 6 characters.'; return;
+  }
+  if (newPwd!==confirmPwd) {
+    msgEl.style.display='block'; msgEl.style.background='rgba(192,57,43,0.1)';
+    msgEl.style.color='#e07070'; msgEl.textContent='Passwords do not match.'; return;
+  }
+  try {
+    const result = await supabaseUpdatePassword(currentUser.token, newPwd);
+    if (result.id||result.email) {
+      msgEl.style.display='block'; msgEl.style.background='rgba(61,153,112,0.1)';
+      msgEl.style.color='#6dbf9a';
+      msgEl.textContent='Password updated successfully. Use your new password next time you log in.';
+      document.getElementById('new-pwd').value='';
+      document.getElementById('confirm-pwd').value='';
+    } else throw new Error(result.message||'Update failed');
+  } catch(e) {
+    msgEl.style.display='block'; msgEl.style.background='rgba(192,57,43,0.1)';
+    msgEl.style.color='#e07070'; msgEl.textContent='Failed to update password: '+e.message;
+  }
+}
+
+let currentUser = null;
+function saveSession(u) { localStorage.setItem('pp_session',JSON.stringify(u)); }
+function clearSession() { localStorage.removeItem('pp_session'); }
+function getSession() { try { return JSON.parse(localStorage.getItem('pp_session')); } catch { return null; } }
 
 async function loadApp(user) {
   document.getElementById('login-screen').style.display='none';
   document.getElementById('app').style.display='block';
-  document.getElementById('nav-unit').textContent=user.role==='admin'?'Admin':`Unit ${user.unit}`;
-  document.getElementById('admin-badge').style.display=user.role==='admin'?'inline':'none';
-  const lastUpdated=await fetchLastUpdated();
+  document.getElementById('nav-unit').textContent = user.role==='admin' ? 'Admin' : `Unit ${user.unit}`;
+  document.getElementById('admin-badge').style.display = user.role==='admin' ? 'inline' : 'none';
+  const lastUpdated = await fetchLastUpdated();
   if (user.role==='admin') {
-    const allData=await Promise.all(ALL_UNITS.map(async u=>{
-      try{const rows=await fetchSheet(u.unit);return parseSheet(rows,u.unit,u.name);}
-      catch{return {unit:u.unit,name:u.name,months:[]};}
+    const allData = await Promise.all(ALL_UNITS.map(async u => {
+      try { const rows=await fetchSheet(u.unit.trim()); return parseSheet(rows,u.unit.trim(),u.name); }
+      catch { return {unit:u.unit.trim(),name:u.name,months:[]}; }
     }));
-    document.getElementById('main-content').innerHTML=renderAdmin(allData,lastUpdated);
+    document.getElementById('main-content').innerHTML = renderAdmin(allData, lastUpdated);
   } else {
-    const rows=await fetchSheet(user.unit);
-    const data=parseSheet(rows,user.unit,user.name);
-    document.getElementById('main-content').innerHTML=renderHomeowner(data,lastUpdated);
+    const tabName = UNIT_TAB_MAP[user.unit]||user.unit;
+    const rows = await fetchSheet(tabName);
+    const data = parseSheet(rows, user.unit, user.name);
+    document.getElementById('main-content').innerHTML = renderHomeowner(data, lastUpdated);
   }
 }
 
-document.getElementById('login-btn').addEventListener('click',handleLogin);
-document.getElementById('password-input').addEventListener('keydown',e=>{if(e.key==='Enter')handleLogin();});
+document.getElementById('login-btn').addEventListener('click', handleLogin);
+document.getElementById('password-input').addEventListener('keydown', e => { if(e.key==='Enter') handleLogin(); });
 
-(async()=>{
-  const saved=getSession();
-  if(!saved?.token)return;
-  try{
-    const r=await fetch(SUPABASE_URL+'/auth/v1/user',{headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+saved.token}});
-    if(r.ok){currentUser=saved;await loadApp(saved);}else clearSession();
-  }catch{clearSession();}
+(async () => {
+  const saved = getSession();
+  if (!saved?.token) return;
+  try {
+    const r = await fetch(SUPABASE_URL+'/auth/v1/user', { headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+saved.token} });
+    if (r.ok) { currentUser=saved; await loadApp(saved); } else clearSession();
+  } catch { clearSession(); }
 })();
 
-document.getElementById('forgot-link').addEventListener('click',async e=>{
+document.getElementById('forgot-link').addEventListener('click', async e => {
   e.preventDefault();
   const email=document.getElementById('email-input').value.trim();
-  const m=document.getElementById('forgot-msg');
-  if(!email){m.style.display='block';m.style.background='rgba(192,57,43,0.1)';m.style.color='#e07070';m.textContent='Please enter your email first.';return;}
-  await fetch(SUPABASE_URL+'/auth/v1/recover',{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},body:JSON.stringify({email,redirect_to:'https://property-portal-sooty.vercel.app'})});
-  m.style.display='block';m.style.background='rgba(61,153,112,0.1)';m.style.color='#6dbf9a';m.textContent='Reset email sent. Check your inbox.';
+  const msgEl=document.getElementById('forgot-msg');
+  if (!email) {
+    msgEl.style.display='block'; msgEl.style.background='rgba(192,57,43,0.1)';
+    msgEl.style.color='#e07070'; msgEl.textContent='Please enter your email address first.'; return;
+  }
+  await supabaseForgotPassword(email);
+  msgEl.style.display='block'; msgEl.style.background='rgba(61,153,112,0.1)';
+  msgEl.style.color='#6dbf9a'; msgEl.textContent='Password reset email sent. Check your inbox.';
 });
 
-document.getElementById('signout-btn').addEventListener('click',async()=>{
-  if(currentUser?.token)await fetch(SUPABASE_URL+'/auth/v1/logout',{method:'POST',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+currentUser.token}}).catch(()=>{});
-  currentUser=null;clearSession();
+document.getElementById('signout-btn').addEventListener('click', async () => {
+  if (currentUser?.token) await supabaseSignOut(currentUser.token);
+  currentUser=null; clearSession();
   document.getElementById('app').style.display='none';
   document.getElementById('login-screen').style.display='flex';
   document.getElementById('email-input').value='';
@@ -515,26 +735,50 @@ document.getElementById('signout-btn').addEventListener('click',async()=>{
   document.getElementById('error-msg').style.display='none';
 });
 
-async function handleLogin(){
+async function supabaseSignOut(token) {
+  try { await fetch(SUPABASE_URL+'/auth/v1/logout',{method:'POST',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+token}}); } catch {}
+}
+async function supabaseSignIn(email,password) {
+  const r=await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},body:JSON.stringify({email,password})});
+  return r.json();
+}
+async function supabaseUpdatePassword(token,newPassword) {
+  const r=await fetch(SUPABASE_URL+'/auth/v1/user',{method:'PUT',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+token},body:JSON.stringify({password:newPassword})});
+  return r.json();
+}
+async function supabaseForgotPassword(email) {
+  await fetch(SUPABASE_URL+'/auth/v1/recover',{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},body:JSON.stringify({email,redirect_to:'https://property-portal-sooty.vercel.app'})});
+}
+
+async function handleLogin() {
   const email=document.getElementById('email-input').value.trim().toLowerCase();
   const password=document.getElementById('password-input').value;
-  const errEl=document.getElementById('error-msg'),loadEl=document.getElementById('loading-msg');
-  errEl.style.display='none';loadEl.style.display='none';
-  if(!email||!password){errEl.textContent='Please enter your email and password.';errEl.style.display='block';return;}
-  loadEl.style.display='block';document.getElementById('login-btn').disabled=true;
-  try{
-    const r=await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},body:JSON.stringify({email,password})});
-    const auth=await r.json();
-    if(!auth.access_token){errEl.textContent='Incorrect email or password.';errEl.style.display='block';return;}
+  const errEl=document.getElementById('error-msg');
+  const loadEl=document.getElementById('loading-msg');
+  errEl.style.display='none'; loadEl.style.display='none';
+  if (!email||!password) { errEl.textContent='Please enter your email and password.'; errEl.style.display='block'; return; }
+  loadEl.style.display='block';
+  document.getElementById('login-btn').disabled=true;
+  try {
+    const auth=await supabaseSignIn(email,password);
+    if (!auth.access_token) { errEl.textContent='Incorrect email or password.'; errEl.style.display='block'; return; }
     const meta=auth.user?.user_metadata||{};
-    const unit=meta.unit||'',name=meta.name||email;
+    const unit=meta.unit||'';
+    const name=meta.name||email;
     const isAdmin=email===ADMIN_EMAIL||unit==='ADMIN';
     currentUser={email,token:auth.access_token,unit,name,role:isAdmin?'admin':'homeowner'};
     saveSession(currentUser);
     await loadApp(currentUser);
-  }catch(err){
-    document.getElementById('main-content').innerHTML=`<div class="alert alert-danger" style="margin-top:2rem"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>Could not load data. (${err.message})</span></div>`;
-  }finally{loadEl.style.display='none';document.getElementById('login-btn').disabled=false;}
+  } catch(err) {
+    document.getElementById('main-content').innerHTML=`
+      <div class="alert alert-danger" style="margin-top:2rem">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>Could not load data. Please check your internet connection. (${err.message})</span>
+      </div>`;
+  } finally {
+    loadEl.style.display='none';
+    document.getElementById('login-btn').disabled=false;
+  }
 }
 </script>
 </body>
