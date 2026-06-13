@@ -276,6 +276,13 @@ function parseSheet(rows, unitName, ownerName) {
       continue;
     }
 
+    // Closing balance with no current month = update BF for next month
+    if (txt.includes('closing') && txt.includes('balance') && !currentMonth) {
+      waterBF   = parseKsh(raw[wCol]||'0', true);
+      serviceBF = parseKsh(raw[sCol]||'0', true);
+      continue;
+    }
+
     if (!currentMonth) continue;
 
     // Closing balance
@@ -314,7 +321,7 @@ function renderHomeowner(data, lastUpdated) {
   const wSub=latest.waterBF+latest.water, sSub=latest.serviceBF+latest.service;
   const grand=wSub+sSub;
   const outstanding=latest.balance>0?latest.balance:(grand>0&&latest.water===0&&latest.service===0?grand:latest.balance);
-  const isCredit=latest.balance<0;
+  const isCredit=latest.balance<0||latest.waterClosing+latest.serviceClosing<0;
   const hasBal=outstanding>0&&!isCredit;
 
   let insight='';
