@@ -401,19 +401,14 @@ const ALL_UNITS = [
 // GOOGLE SHEETS FETCH
 // ─────────────────────────────────────────────
 async function fetchSheet(sheetName) {
-  // Wrap in single quotes to handle sheet names with spaces/dots
-const range = encodeURIComponent(`'${sheetName.trim()}'!A1:Z1000`);
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?key=${API_KEY}&valueRenderOption=FORMATTED_VALUE`;
+  const name = sheetName.trim();
+  const needsQuotes = name.includes('.') || name.includes(' ');
+  const safeName = needsQuotes ? `'${name}'` : name;
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${safeName}!A1:Z1000?key=${API_KEY}&valueRenderOption=FORMATTED_VALUE`;
   const res = await fetch(url);
-  if (!res.ok) {
-    // Try without quotes as fallback
-    const range2 = encodeURIComponent(sheetName.trim());
-    const url2 = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range2}?key=${API_KEY}&valueRenderOption=FORMATTED_VALUE`;
-    const res2 = await fetch(url2);
-    if (!res2.ok) throw new Error(`Failed to fetch sheet: ${sheetName} (${res.status})`);
-    const data2 = await res2.json();
-    return data2.values || [];
-  }
+  if (!res.ok) throw new Error(`Sheet error: ${name} (${res.status})`);
+  return (await res.json()).values || [];
+}
   const data = await res.json();
   return data.values || [];
 }
