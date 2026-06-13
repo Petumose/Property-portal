@@ -187,10 +187,24 @@ function parseSheet(rows, unitName, ownerName) {
   let waterBF = 0, serviceBF = 0;
   let pendingW = 0, pendingS = 0, pendingP = 0;
 
-  // For units with complex reconciliation sheets, skip to 2nd quarter
+  // For units with complex reconciliation sheets, skip to specific month
   if (SKIP_TO_Q2.includes(unitName)) {
-    const q2idx = rows.findIndex(r => r.join(' ').toLowerCase().includes('2nd quater') || r.join(' ').toLowerCase().includes('2nd quarter'));
-    if (q2idx > 0) rows = rows.slice(q2idx);
+    const skipIdx = rows.findIndex(r => {
+      const txt = r.join(' ').toLowerCase();
+      return txt.includes('2nd quater') || txt.includes('2nd quarter');
+    });
+    if (skipIdx > 0) {
+      // Find the closing balance row just before 2nd quarter to get correct BF
+      const bfRow = rows[skipIdx + 2]; // header rows after 2nd quarter marker
+      if (bfRow) {
+        const bfTxt = bfRow.join(' ').toLowerCase();
+        if (bfTxt.includes('closing balance') || bfTxt.includes('bal b/f')) {
+          waterBF = parseKsh(bfRow[wCol]||'0', true);
+          serviceBF = parseKsh(bfRow[sCol]||'0', true);
+        }
+      }
+      rows = rows.slice(skipIdx);
+    }
   }
 
   // Detect water/service column positions from first header row
