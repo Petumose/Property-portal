@@ -212,10 +212,11 @@ function parseSheet(rows, unitName, ownerName) {
   }
   for (let i = 0; i < rows.length; i++) {
     const r = rows[i].map(c=>(c||'').toString().trim().toLowerCase());
+    let found = false;
     for (let j = 0; j < r.length; j++) {
-      if (r[j].includes('water bill')) { wCol=j; sCol=j+1; tCol=j+2; break; }
+      if (r[j] === 'water bill') { wCol=j; sCol=j+1; tCol=j+2; found=true; break; }
     }
-    if (wCol !== 3) break;
+    if (found) break;
   }
 
   for (let i = 0; i < rows.length; i++) {
