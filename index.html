@@ -21,89 +21,169 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+
+  /* LOGIN */
   #login-screen {
-    min-height: 100vh; display: flex; align-items: center; justify-content: center;
-    background: var(--bg); position: relative; overflow: hidden;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
   }
   #login-screen::before {
-    content: ''; position: absolute; width: 600px; height: 600px;
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
     background: radial-gradient(circle, rgba(61,153,112,0.06) 0%, transparent 70%);
-    top: -100px; left: -100px; pointer-events: none;
+    top: -100px; left: -100px;
+    pointer-events: none;
   }
   .login-card {
-    width: 420px; background: var(--surface); border: 0.5px solid var(--border);
-    border-radius: 20px; padding: 2.5rem; position: relative; z-index: 1;
+    width: 420px;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 20px;
+    padding: 2.5rem;
+    position: relative;
+    z-index: 1;
   }
   .login-logo {
-    width: 44px; height: 44px; background: var(--accent-dim);
-    border: 1px solid rgba(61,153,112,0.3); border-radius: 12px;
-    display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;
+    width: 44px; height: 44px;
+    background: var(--accent-dim);
+    border: 1px solid rgba(61,153,112,0.3);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1.5rem;
   }
   .login-title { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--text); margin-bottom: 4px; }
   .login-sub { font-size: 13px; color: var(--muted); margin-bottom: 2rem; font-weight: 300; }
   .field-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; display: block; }
   .field { margin-bottom: 1.1rem; }
   .field input {
-    width: 100%; background: var(--bg); border: 0.5px solid rgba(255,255,255,0.1);
-    border-radius: 10px; padding: 11px 14px; color: var(--text); font-size: 14px;
-    font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.2s;
+    width: 100%;
+    background: var(--bg);
+    border: 0.5px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 11px 14px;
+    color: var(--text);
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
   }
   .field input:focus { border-color: rgba(61,153,112,0.5); }
   .btn-login {
-    width: 100%; padding: 12px; background: var(--accent); border: none; border-radius: 10px;
-    color: #fff; font-size: 14px; font-family: 'DM Sans', sans-serif; font-weight: 500;
-    cursor: pointer; letter-spacing: 0.02em; transition: opacity 0.2s; margin-top: 0.5rem;
+    width: 100%;
+    padding: 12px;
+    background: var(--accent);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: opacity 0.2s;
+    margin-top: 0.5rem;
   }
   .btn-login:hover { opacity: 0.88; }
   .error-msg {
-    background: var(--danger-dim); border: 0.5px solid rgba(192,57,43,0.25);
-    border-radius: 8px; padding: 10px 14px; color: #e07070; font-size: 13px;
-    margin-bottom: 1rem; display: none;
+    background: var(--danger-dim);
+    border: 0.5px solid rgba(192,57,43,0.25);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: #e07070;
+    font-size: 13px;
+    margin-bottom: 1rem;
+    display: none;
   }
   .loading-msg {
-    background: var(--accent-dim); border: 0.5px solid rgba(61,153,112,0.25);
-    border-radius: 8px; padding: 10px 14px; color: var(--accent); font-size: 13px;
-    margin-bottom: 1rem; display: none; text-align: center;
+    background: var(--accent-dim);
+    border: 0.5px solid rgba(61,153,112,0.25);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--accent);
+    font-size: 13px;
+    margin-bottom: 1rem;
+    display: none;
+    text-align: center;
   }
+
+  /* NAV */
   #app { display: none; }
   nav {
-    border-bottom: 0.5px solid var(--border); padding: 0 2rem; position: sticky; top: 0;
-    background: rgba(10,13,15,0.95); backdrop-filter: blur(12px); z-index: 100;
+    border-bottom: 0.5px solid var(--border);
+    padding: 0 2rem;
+    position: sticky; top: 0;
+    background: rgba(10,13,15,0.95);
+    backdrop-filter: blur(12px);
+    z-index: 100;
   }
   .nav-inner {
-    max-width: 960px; margin: 0 auto; display: flex; align-items: center;
-    justify-content: space-between; height: 56px;
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
   }
   .nav-brand { display: flex; align-items: center; gap: 10px; }
   .nav-icon {
-    width: 28px; height: 28px; background: var(--accent-dim);
-    border: 1px solid rgba(61,153,112,0.3); border-radius: 7px;
+    width: 28px; height: 28px;
+    background: var(--accent-dim);
+    border: 1px solid rgba(61,153,112,0.3);
+    border-radius: 7px;
     display: flex; align-items: center; justify-content: center;
   }
   .nav-title { font-size: 14px; font-weight: 500; color: #bbb; letter-spacing: 0.01em; }
   .nav-right { display: flex; align-items: center; gap: 14px; }
   .nav-unit { font-size: 11px; color: var(--muted); }
   .btn-signout {
-    background: none; border: 0.5px solid rgba(255,255,255,0.1); border-radius: 7px;
-    color: var(--muted); font-size: 12px; padding: 5px 12px; cursor: pointer;
-    font-family: 'DM Sans', sans-serif; transition: color 0.2s;
+    background: none;
+    border: 0.5px solid rgba(255,255,255,0.1);
+    border-radius: 7px;
+    color: var(--muted);
+    font-size: 12px;
+    padding: 5px 12px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: color 0.2s;
   }
   .btn-signout:hover { color: var(--text); }
+
+  /* MAIN */
   main { max-width: 960px; margin: 0 auto; padding: 2.5rem 2rem; }
+
   .page-header { margin-bottom: 2.2rem; }
   .page-eyebrow { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
   .page-title { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--text); font-weight: 400; letter-spacing: -0.3px; }
+
+  /* ALERT */
   .alert {
-    border-radius: 12px; padding: 14px 18px; display: flex; align-items: flex-start;
-    gap: 10px; margin-bottom: 1.8rem; font-size: 13.5px; line-height: 1.6;
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 1.8rem;
+    font-size: 13.5px;
+    line-height: 1.6;
   }
   .alert-danger { background: var(--danger-dim); border: 0.5px solid rgba(192,57,43,0.25); color: #e07070; }
   .alert-success { background: var(--accent-dim); border: 0.5px solid rgba(61,153,112,0.25); color: #6dbf9a; }
   .alert svg { flex-shrink: 0; margin-top: 1px; }
+
+  /* CARDS */
   .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 12px; margin-bottom: 1.8rem; }
   .card {
-    background: var(--surface); border: 0.5px solid var(--border); border-radius: 12px;
-    padding: 1.1rem 1.2rem; transition: border-color 0.2s;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1.1rem 1.2rem;
+    transition: border-color 0.2s;
   }
   .card:hover { border-color: rgba(255,255,255,0.12); }
   .card-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
@@ -111,57 +191,108 @@
   .card-value.green { color: var(--accent); }
   .card-value.red { color: #e05c5c; }
   .card-sub { font-size: 11px; color: var(--muted); }
+
+  /* INSIGHT */
   .insight {
-    background: var(--surface2); border: 0.5px solid rgba(61,153,112,0.18);
-    border-radius: 12px; padding: 14px 18px; margin-bottom: 1.8rem;
-    display: flex; gap: 10px; align-items: flex-start;
+    background: var(--surface2);
+    border: 0.5px solid rgba(61,153,112,0.18);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 1.8rem;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
   }
   .insight p { font-size: 13.5px; color: #7aaa90; line-height: 1.65; }
+
+  /* CHART */
   .chart-box {
-    background: var(--surface); border: 0.5px solid var(--border);
-    border-radius: 14px; padding: 1.5rem; margin-bottom: 1.8rem;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    margin-bottom: 1.8rem;
   }
   .section-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.2rem; }
   .bar-chart { display: flex; align-items: flex-end; gap: 10px; height: 140px; }
   .bar-group { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
   .bar-wrap { width: 100%; display: flex; align-items: flex-end; justify-content: center; height: 110px; }
   .bar {
-    width: 60%; background: var(--accent); border-radius: 5px 5px 0 0;
-    transition: height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative;
+    width: 60%;
+    background: var(--accent);
+    border-radius: 5px 5px 0 0;
+    transition: height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
   }
   .bar:hover::after {
-    content: attr(data-val); position: absolute; top: -26px; left: 50%;
-    transform: translateX(-50%); background: var(--surface2); border: 0.5px solid var(--border);
-    border-radius: 5px; padding: 3px 7px; font-size: 11px; color: var(--text);
-    white-space: nowrap; pointer-events: none;
+    content: attr(data-val);
+    position: absolute;
+    top: -26px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--surface2);
+    border: 0.5px solid var(--border);
+    border-radius: 5px;
+    padding: 3px 7px;
+    font-size: 11px;
+    color: var(--text);
+    white-space: nowrap;
+    pointer-events: none;
   }
   .bar-label { font-size: 11px; color: var(--muted); text-align: center; }
+
+  /* TABLE */
   .table-box {
-    background: var(--surface); border: 0.5px solid var(--border); border-radius: 14px;
-    padding: 1.5rem; overflow-x: auto; margin-bottom: 1.8rem;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    overflow-x: auto;
+    margin-bottom: 1.8rem;
   }
   table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 580px; }
   th {
-    font-size: 10px; color: var(--muted); font-weight: 400; text-transform: uppercase;
-    letter-spacing: 0.07em; padding: 6px 10px; border-bottom: 0.5px solid var(--border); text-align: right;
+    font-size: 10px;
+    color: var(--muted);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding: 6px 10px;
+    border-bottom: 0.5px solid var(--border);
+    text-align: right;
   }
   th:first-child { text-align: left; }
   td { padding: 11px 10px; border-bottom: 0.5px solid rgba(255,255,255,0.04); text-align: right; color: #bbb; }
   td:first-child { text-align: left; color: #888; }
   tr:last-child td { border-bottom: none; }
-  .badge { display: inline-block; font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 500; }
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
   .badge-red { background: var(--danger-dim); color: #e05c5c; border: 0.5px solid rgba(192,57,43,0.2); }
   .badge-green { background: var(--accent-dim); color: var(--accent); border: 0.5px solid rgba(61,153,112,0.2); }
   .badge-admin { background: rgba(201,168,76,0.12); color: var(--gold); border: 0.5px solid rgba(201,168,76,0.25); font-size: 10px; padding: 2px 7px; border-radius: 4px; }
+
   .timestamp { font-size: 11px; color: #2a3038; text-align: right; margin-top: 0.8rem; }
+
+  /* LOADING SPINNER */
   .spinner {
-    width: 32px; height: 32px; border: 2px solid rgba(61,153,112,0.2);
-    border-top-color: var(--accent); border-radius: 50%;
-    animation: spin 0.8s linear infinite; margin: 4rem auto; display: block;
+    width: 32px; height: 32px;
+    border: 2px solid rgba(61,153,112,0.2);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 4rem auto;
+    display: block;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
+
   .loading-view { text-align: center; padding: 4rem 2rem; }
   .loading-view p { color: var(--muted); font-size: 13px; margin-top: 1rem; }
+
   @media (max-width: 600px) {
     main { padding: 1.5rem 1rem; }
     .cards { grid-template-columns: repeat(2, 1fr); }
@@ -171,6 +302,7 @@
 </head>
 <body>
 
+<!-- LOGIN -->
 <div id="login-screen">
   <div class="login-card">
     <div class="login-logo">
@@ -188,7 +320,7 @@
       <label class="field-label">Password</label>
       <div style="position:relative">
         <input type="password" id="password-input" placeholder="••••••••" autocomplete="current-password" style="width:100%;padding-right:40px"/>
-        <button type="button" onclick="togglePwd()" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);padding:0;display:flex;align-items:center">
+        <button type="button" id="toggle-pwd" onclick="togglePwd()" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);padding:0;display:flex;align-items:center">
           <svg id="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
         </button>
       </div>
@@ -201,6 +333,7 @@
   </div>
 </div>
 
+<!-- APP -->
 <div id="app">
   <nav>
     <div class="nav-inner">
@@ -218,18 +351,26 @@
     </div>
   </nav>
   <main id="main-content">
-    <div class="loading-view"><span class="spinner"></span><p>Fetching your data…</p></div>
+    <div class="loading-view">
+      <span class="spinner"></span>
+      <p>Fetching your data…</p>
+    </div>
   </main>
 </div>
 
 <script>
-const SHEET_ID     = '1fsmC2ft-uJfArAtmBFFvCmR62NNqkjTA76ulRjsJ0dc';
-const API_KEY      = 'AIzaSyAORZ8PWN4dnt06w8JPbi_dVlS9dJ3ZqW0';
-const SUPABASE_URL = 'https://aymkbgkoralmgznfynnz.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_jewDtFZIL6IcF_6KLBaf8A_uets21aw';
-const ADMIN_EMAIL  = 'admin@property.com';
+// ─────────────────────────────────────────────
+// CONFIG — replace with your real values
+// ─────────────────────────────────────────────
+const SHEET_ID      = '1fsmC2ft-uJfArAtmBFFvCmR62NNqkjTA76ulRjsJ0dc';
+const API_KEY       = 'AIzaSyAORZ8PWN4dnt06w8JPbi_dVlS9dJ3ZqW0';
+const SUPABASE_URL  = 'https://aymkbgkoralmgznfynnz.supabase.co';
+const SUPABASE_KEY  = 'sb_publishable_jewDtFZIL6IcF_6KLBaf8A_uets21aw';
+const ADMIN_EMAIL   = 'admin@property.com';
+
 const UNIT_TAB_MAP = {};
 
+// All units for admin view
 const ALL_UNITS = [
   {unit:'D101',name:'Mellon Achieng Otieno'},{unit:'D102',name:'Daniel Njuguna'},
   {unit:'D103.1',name:'Lydia Were'},{unit:'D103.2',name:'Wessmen Investment'},
@@ -256,175 +397,231 @@ const ALL_UNITS = [
   {unit:'D805',name:'Herina Ventures'},{unit:'D806',name:'Joshua Ligare'},
 ];
 
+// ─────────────────────────────────────────────
+// GOOGLE SHEETS FETCH
+// ─────────────────────────────────────────────
 async function fetchSheet(sheetName) {
-  const name = sheetName.trim();
-  const range = encodeURIComponent(name) + '!A1:Z1000';
+  // Wrap in single quotes to handle sheet names with spaces/dots
+const range = encodeURIComponent(`'${sheetName.trim()}'!A1:Z1000`);
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?key=${API_KEY}&valueRenderOption=FORMATTED_VALUE`;
   const res = await fetch(url);
-  if (!res.ok) throw new Error(`Failed to fetch sheet: ${name} (${res.status})`);
-  return (await res.json()).values || [];
-}
+  if (!res.ok) {
+    // Try without quotes as fallback
+    const range2 = encodeURIComponent(sheetName.trim());
+    const url2 = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range2}?key=${API_KEY}&valueRenderOption=FORMATTED_VALUE`;
+    const res2 = await fetch(url2);
+    if (!res2.ok) throw new Error(`Failed to fetch sheet: ${sheetName} (${res.status})`);
+    const data2 = await res2.json();
+    return data2.values || [];
   }
-  return (await res.json()).values || [];
+  const data = await res.json();
+  return data.values || [];
 }
 
-function parseKsh(val, allowNegative) {
-  if (!val) return 0;
-  const str = val.toString().replace(/,/g, '').replace(/[^0-9.\-]/g, '');
-  const n = parseFloat(str);
-  if (isNaN(n)) return 0;
-  return allowNegative ? n : Math.abs(n);
-}
-
+// ─────────────────────────────────────────────
+// PARSE SHEET DATA
+// Expects your sheet structure:
+// Row with "Bal b/f" = opening balance
+// Rows with month names contain charges and payments
+// Rows with "closing balance" contain closing balance
+// ─────────────────────────────────────────────
 function parseSheet(rows, unitName, ownerName) {
   const months = [];
   let currentMonth = null;
-  let waterBF = 0, serviceBF = 0;
-  let pendingWater = 0, pendingService = 0, pendingPayment = 0;
+  let waterBF = 0;
+  let serviceBF = 0;
+  let pendingWater = 0;
+  let pendingService = 0;
 
   const MONTH_RE = /^(january|february|march|april|may|june|july|august|september|october|november|december)[\s\-–]?\d{2}/i;
 
-  // Auto-detect water/service columns from FIRST "water bill" header
+  // Auto-detect columns by finding FIRST "Water Bill" header row
+  // Only use the first occurrence to avoid re-detection on quarter headers
   let wCol = 3, sCol = 4, tCol = 5;
   for (let i = 0; i < rows.length; i++) {
-    const r = rows[i].map(c => (c||'').toString().trim().toLowerCase());
-    for (let j = 0; j < r.length; j++) {
-      if (r[j].includes('water bill')) { wCol = j; sCol = j+1; tCol = j+2; break; }
+    const row = rows[i].map(c => (c || '').toString().trim().toLowerCase());
+    let found = false;
+    for (let j = 0; j < row.length; j++) {
+      if (row[j].includes('water bill') || row[j] === 'water bill') {
+        wCol = j;
+        sCol = j + 1;
+        tCol = j + 2;
+        found = true;
+        break;
+      }
     }
-    if (wCol !== 3) break;
+    if (found) break; // Stop at first occurrence only
   }
 
   for (let i = 0; i < rows.length; i++) {
-    const row = rows[i].map(c => (c||'').toString().trim());
+    const row = rows[i].map(c => (c || '').toString().trim());
     const fullText = row.join(' ').toLowerCase();
 
     // Opening balance
-    if ((fullText.includes('bal b/f') || fullText.includes('bal b/d')) && months.length === 0) {
+    if (fullText.includes('bal b/f') || fullText.includes('bal b/d')) {
       waterBF   = parseKsh(row[wCol] || row[wCol-1] || '0', true);
       serviceBF = parseKsh(row[sCol] || row[sCol-1] || '0', true);
-      continue;
     }
 
-    // Charges row — capture as pending if no current month yet, or assign directly
-    if ((fullText.includes('water and service') || fullText.includes('water & service')) &&
-        !fullText.includes('closing') && !fullText.includes('sum')) {
+    // Charges row — check BEFORE month detection so charges before month label are captured
+    if ((fullText.includes('water and service') || fullText.includes('water & service')) && !fullText.includes('closing balance')) {
       const w = parseKsh(row[wCol] || '0');
       const s = parseKsh(row[sCol] || '0');
-      if (currentMonth) {
-        if (w > 0) currentMonth.water = w;
-        if (s > 0) currentMonth.service = s;
-      } else {
-        if (w > 0) pendingWater = w;
-        if (s > 0) pendingService = s;
-      }
-      continue;
-    }
-
-    // Payment row (before month label) — capture as pending
-    if (fullText.includes('payment') && !fullText.includes('closing') &&
-        !fullText.includes('total bal') && !fullText.includes('sum') && !fullText.includes('bal b')) {
-      // Look for negative values indicating payments
-      for (let j = wCol - 1; j <= tCol; j++) {
-        if (!row[j]) continue;
-        const raw = row[j].toString();
-        if (raw.includes('-')) {
-          const p = parseKsh(raw);
-          if (p > 0) {
-            if (currentMonth) currentMonth.payment += p;
-            else pendingPayment += p;
-          }
+      // Store as pending charges to assign to next month
+      if (w > 0 || s > 0) {
+        // If we already have a current month, assign directly
+        if (currentMonth) {
+          if (w > 0) currentMonth.water = w;
+          if (s > 0) currentMonth.service = s;
+        } else {
+          // Store as pending for next month
+          waterBF._pendingWater = w;
+          waterBF._pendingService = s;
         }
       }
     }
 
-    // Detect month label row
+    // Detect month row — check cols 0,1,2
     const monthCell = [row[0], row[1], row[2]].find(c => MONTH_RE.test(c));
     if (monthCell) {
-      // Check if month already exists (avoid duplicate from 2nd quarter header)
-      const existing = months.find(m => m.month.toLowerCase() === monthCell.toLowerCase());
-      if (existing) { currentMonth = existing; continue; }
-
-      const prev = months.length > 0 ? months[months.length-1] : null;
+      const prevBalance = months.length > 0 ? months[months.length - 1] : null;
       currentMonth = {
         month: monthCell,
-        water: pendingWater,
-        service: pendingService,
-        waterBF: prev ? prev.waterClosing : waterBF,
-        serviceBF: prev ? prev.serviceClosing : serviceBF,
-        waterClosing: 0, serviceClosing: 0,
-        payment: pendingPayment,
+        water: pendingWater || 0,
+        service: pendingService || 0,
+        waterBF: prevBalance ? prevBalance.waterClosing : waterBF,
+        serviceBF: prevBalance ? prevBalance.serviceClosing : serviceBF,
+        waterClosing: 0,
+        serviceClosing: 0,
+        payment: 0,
         balance: 0,
       };
-      pendingWater = 0; pendingService = 0; pendingPayment = 0;
+      // Clear pending
+      pendingWater = 0;
+      pendingService = 0;
       months.push(currentMonth);
+      // Payment on same row as month label - payments are negative in sheet
+      if (fullText.includes('payment')) {
+        // Find all numeric values in row, take absolute values
+        for (let j = wCol; j <= tCol; j++) {
+          const v = parseKsh(row[j] || '0');
+          if (v > 0) { currentMonth.payment = v; break; }
+        }
+      }
       continue;
     }
 
     if (!currentMonth) continue;
 
-    // Closing balance
-    if (fullText.includes('closing balance') || (fullText.includes('closing') && fullText.includes('balance'))) {
+    // Charges row after month label (some sheets have charges after)
+    if ((fullText.includes('water and service') || fullText.includes('water & service')) && !fullText.includes('closing balance')) {
+      const w = parseKsh(row[wCol] || '0');
+      const s = parseKsh(row[sCol] || '0');
+      if (w > 0) currentMonth.water = w;
+      if (s > 0) currentMonth.service = s;
+    }
+
+    // Payment row
+    if (fullText.includes('payment received')) {
+      const p = parseKsh(row[wCol] || row[wCol-1] || '0');
+      if (p > 0) currentMonth.payment = p;
+    }
+
+    // Closing balance row
+    if (fullText.includes('closing balance')) {
       currentMonth.waterClosing   = parseKsh(row[wCol] || '0', true);
       currentMonth.serviceClosing = parseKsh(row[sCol] || '0', true);
-      const tc = parseKsh(row[tCol] || '0', true);
-      currentMonth.balance = Math.abs(tc) || Math.abs(currentMonth.waterClosing + currentMonth.serviceClosing);
+      currentMonth.balance        = parseKsh(row[tCol] || row[sCol] || row[wCol] || '0');
     }
   }
 
   return { unit: unitName, name: ownerName, months, waterBF, serviceBF };
 }
 
+function parseKsh(val, allowNegative) {
+  const str = val.toString().replace(/[^0-9.\-]/g, '');
+  const n = parseFloat(str);
+  if (isNaN(n)) return 0;
+  return allowNegative ? n : Math.abs(n);
+}
+
 function fmt(n) {
-  if (n < 0) return '<span style="color:var(--accent)">Credit KSh ' + Number(Math.abs(n)).toLocaleString('en-KE',{minimumFractionDigits:2}) + '</span>';
-  return 'KSh ' + Number(n).toLocaleString('en-KE',{minimumFractionDigits:2});
+  if (n < 0) return '<span style="color:var(--accent)">Credit KSh ' + Number(Math.abs(n)).toLocaleString('en-KE', { minimumFractionDigits: 2 }) + '</span>';
+  return 'KSh ' + Number(n).toLocaleString('en-KE', { minimumFractionDigits: 2 });
 }
 
+// ─────────────────────────────────────────────
+// FETCH LAST UPDATED TIMESTAMP
+// ─────────────────────────────────────────────
 async function fetchLastUpdated() {
-  try { const rows = await fetchSheet('LastUpdated'); return rows[0]?.[0] || 'N/A'; }
-  catch { return new Date().toLocaleDateString('en-KE',{day:'numeric',month:'long',year:'numeric'}); }
+  try {
+    const rows = await fetchSheet('LastUpdated');
+    return rows[0]?.[0] || 'N/A';
+  } catch {
+    // Try to get spreadsheet metadata for last modified
+    return new Date().toLocaleDateString('en-KE', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
 }
 
+// ─────────────────────────────────────────────
+// RENDER HOMEOWNER VIEW
+// ─────────────────────────────────────────────
 function renderHomeowner(data, lastUpdated) {
   const months = data.months;
   if (!months.length) return `<p style="color:var(--muted);padding:2rem 0">No data found for your unit. Please contact your property manager.</p>`;
 
-  let latestIdx = months.length - 1;
-  if (months.length > 1) {
-    const last = months[months.length-1];
-    if (last.water===0 && last.service===0 && last.payment===0 && last.balance===0) latestIdx = months.length-2;
+  // Show previous month as current if latest month has no charges yet
+  // (bills issued at start of following month)
+let latestIdx = months.length - 1;
+if (months.length > 1) {
+    const last = months[months.length - 1];
+    if (last.water === 0 && last.service === 0 && last.payment === 0 && last.balance === 0) {
+      latestIdx = months.length - 2;
+    }
   }
-  const latest = months[latestIdx];
-  const prev   = latestIdx > 0 ? months[latestIdx-1] : null;
+  const latest  = months[latestIdx];
+  const prev    = latestIdx > 0 ? months[latestIdx - 1] : null;
 
   const waterSubtotal   = latest.waterBF + latest.water;
   const serviceSubtotal = latest.serviceBF + latest.service;
   const grandTotal      = waterSubtotal + serviceSubtotal;
-  const outstandingAmount = latest.balance > 0 ? latest.balance : (grandTotal > 0 && latest.water===0 && latest.service===0 ? grandTotal : latest.balance);
+  // Outstanding = closing balance if set, otherwise grand total if b/f exists and no charges entered yet
+  const outstandingAmount = latest.balance > 0 ? latest.balance : (grandTotal > 0 && latest.water === 0 && latest.service === 0 ? grandTotal : latest.balance);
   const hasBalance = outstandingAmount > 0;
 
+  // Insight
   let insightText = '';
   if (prev && prev.water > 0) {
     const diff = latest.water - prev.water;
-    const pct  = Math.round(Math.abs(diff)/prev.water*100);
+    const pct  = Math.round(Math.abs(diff) / prev.water * 100);
     if (diff > 0)      insightText = `Your water bill increased by ${pct}% compared to ${prev.month}. Consider checking for any leaks or unusual usage.`;
     else if (diff < 0) insightText = `Your water bill decreased by ${pct}% compared to ${prev.month}. Good job managing your water usage.`;
     else               insightText = `Your water bill is unchanged from ${prev.month}.`;
   }
 
-  const maxWater = Math.max(...months.map(m=>m.water),1);
+  // Bar chart
+  const maxWater = Math.max(...months.map(m => m.water), 1);
   const bars = months.map(m => {
-    const h = Math.max(Math.round((m.water/maxWater)*100),2);
-    const label = m.month.replace(/[-– ]\d{2}$/,'').substring(0,3);
-    return `<div class="bar-group"><div class="bar-wrap"><div class="bar" style="height:${h}%" data-val="${fmt(m.water)}"></div></div><div class="bar-label">${label}</div></div>`;
+    const h = Math.max(Math.round((m.water / maxWater) * 100), 2);
+    const label = m.month.replace(/[-– ]\d{2}$/, '').substring(0,3);
+    return `<div class="bar-group">
+      <div class="bar-wrap"><div class="bar" style="height:${h}%" data-val="${fmt(m.water)}"></div></div>
+      <div class="bar-label">${label}</div>
+    </div>`;
   }).join('');
 
+  // Table rows (newest first)
   const tableRows = [...months].reverse().map(m => `
     <tr>
       <td>${m.month}</td>
-      <td>${fmt(m.waterBF)}</td><td>${fmt(m.water)}</td><td>${fmt(m.waterBF+m.water)}</td>
-      <td>${fmt(m.serviceBF)}</td><td>${fmt(m.service)}</td><td>${fmt(m.serviceBF+m.service)}</td>
+      <td>${fmt(m.waterBF)}</td>
+      <td>${fmt(m.water)}</td>
+      <td>${fmt(m.waterBF + m.water)}</td>
+      <td>${fmt(m.serviceBF)}</td>
+      <td>${fmt(m.service)}</td>
+      <td>${fmt(m.serviceBF + m.service)}</td>
       <td style="color:var(--accent)">${fmt(m.payment)}</td>
-      <td style="color:${m.balance>0?'#e05c5c':'var(--accent)'};font-weight:500">${fmt(m.balance)}</td>
+      <td style="color:${m.balance > 0 ? '#e05c5c' : 'var(--accent)'}; font-weight:500">${fmt(m.balance)}</td>
     </tr>`).join('');
 
   return `
@@ -444,8 +641,11 @@ function renderHomeowner(data, lastUpdated) {
       <span>Your account is fully cleared. No outstanding balance.</span>
     </div>`}
 
+    <!-- BILL BREAKDOWN -->
     <div class="chart-box" style="margin-bottom:1.8rem">
       <div class="section-label" style="margin-bottom:1.4rem">Bill breakdown — ${latest.month}</div>
+
+      <!-- WATER SECTION -->
       <div style="margin-bottom:1px">
         <div style="background:rgba(61,153,112,0.06);border:0.5px solid rgba(61,153,112,0.15);border-radius:10px 10px 0 0;padding:8px 1.3rem">
           <span style="font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:0.08em;font-weight:500">Water</span>
@@ -460,11 +660,13 @@ function renderHomeowner(data, lastUpdated) {
             <div class="card-value" style="font-size:17px">${fmt(latest.water)}</div>
           </div>
         </div>
-        <div style="background:var(--surface);border:0.5px solid rgba(61,153,112,0.15);border-top:none;padding:0.9rem 1.3rem;display:flex;justify-content:space-between;align-items:center">
+        <div style="background:var(--surface);border:0.5px solid rgba(61,153,112,0.15);border-top:none;border-radius:0 0 0 0;padding:0.9rem 1.3rem;display:flex;justify-content:space-between;align-items:center">
           <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em">Water subtotal</span>
           <span style="font-family:'DM Serif Display',serif;font-size:17px;color:var(--text)">${fmt(waterSubtotal)}</span>
         </div>
       </div>
+
+      <!-- SERVICE CHARGE SECTION -->
       <div style="margin-top:10px;margin-bottom:1px">
         <div style="background:rgba(201,168,76,0.06);border:0.5px solid rgba(201,168,76,0.15);border-radius:10px 10px 0 0;padding:8px 1.3rem">
           <span style="font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:0.08em;font-weight:500">Service Charge</span>
@@ -484,26 +686,29 @@ function renderHomeowner(data, lastUpdated) {
           <span style="font-family:'DM Serif Display',serif;font-size:17px;color:var(--text)">${fmt(serviceSubtotal)}</span>
         </div>
       </div>
+
+      <!-- GRAND TOTAL -->
       <div style="background:var(--surface);border:0.5px solid rgba(61,153,112,0.25);border-radius:10px;padding:1.1rem 1.3rem;margin-top:10px;display:flex;justify-content:space-between;align-items:center">
         <div>
           <div class="card-label">Grand total payable</div>
           <div style="font-size:11px;color:var(--muted);margin-top:2px">Water + Service subtotals</div>
         </div>
-        <div class="card-value" style="font-size:22px;color:var(--accent)">${fmt(latest.balance>0?latest.balance:grandTotal)}</div>
+        <div class="card-value" style="font-size:22px;color:var(--accent)">${fmt(latest.balance > 0 ? latest.balance : grandTotal)}</div>
       </div>
       <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:10px;padding:1.1rem 1.3rem;margin-top:2px;display:flex;justify-content:space-between;align-items:center">
         <div class="card-label">Payment received</div>
         <div class="card-value" style="font-size:20px;color:var(--accent)">${fmt(latest.payment)}</div>
       </div>
-      <div style="background:var(--surface);border:0.5px solid ${hasBalance?'rgba(192,57,43,0.25)':'rgba(61,153,112,0.2)'};border-radius:10px;padding:1.1rem 1.3rem;margin-top:2px;display:flex;justify-content:space-between;align-items:center">
+      <div style="background:var(--surface);border:0.5px solid ${hasBalance ? 'rgba(192,57,43,0.25)' : 'rgba(61,153,112,0.2)'};border-radius:10px;padding:1.1rem 1.3rem;margin-top:2px;display:flex;justify-content:space-between;align-items:center">
         <div>
           <div class="card-label">Closing balance</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px">${hasBalance?'Amount outstanding':'Fully cleared'}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">${hasBalance ? 'Amount outstanding' : 'Fully cleared'}</div>
         </div>
-        <div class="card-value" style="font-size:22px;color:${hasBalance?'#e05c5c':'var(--accent)'}">${fmt(outstandingAmount)}</div>
+        <div class="card-value" style="font-size:22px;color:${hasBalance ? '#e05c5c' : 'var(--accent)'}">${fmt(outstandingAmount)}</div>
       </div>
     </div>
 
+    <!-- MPESA PAYMENT -->
     ${hasBalance ? `
     <div style="background:var(--surface);border:0.5px solid rgba(61,153,112,0.2);border-radius:14px;padding:1.5rem;margin-bottom:1.8rem">
       <div class="section-label" style="margin-bottom:1rem">Pay via M-Pesa</div>
@@ -557,6 +762,7 @@ function renderHomeowner(data, lastUpdated) {
       </table>
     </div>
 
+    <!-- CHANGE PASSWORD -->
     <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1.8rem">
       <div class="section-label" style="margin-bottom:1rem">Change password</div>
       <div id="pwd-msg" style="display:none;margin-bottom:0.8rem;font-size:13px;padding:8px 12px;border-radius:6px"></div>
@@ -573,70 +779,82 @@ function renderHomeowner(data, lastUpdated) {
       <button onclick="changePassword()" style="background:var(--surface2);border:0.5px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--text);font-size:13px;padding:10px 18px;cursor:pointer;font-family:'DM Sans',sans-serif">
         Update password
       </button>
-      <p style="font-size:11px;color:var(--muted);margin-top:8px">Password is saved securely and works on all devices.</p>
+      <p style="font-size:11px;color:var(--muted);margin-top:8px">Password is saved on this device.</p>
     </div>
 
     <p class="timestamp">Last updated: ${lastUpdated}</p>
   `;
 }
 
+// ─────────────────────────────────────────────
+// RENDER ADMIN VIEW
+// ─────────────────────────────────────────────
 function renderAdmin(allData, lastUpdated) {
   const rows = allData.map(d => {
     if (!d.months.length) return null;
-    const l = d.months[d.months.length-1];
-    return { unit:d.unit, name:d.name, month:l.month, water:l.water, service:l.service, total:l.water+l.service, payment:l.payment, balance:l.balance };
+    const l = d.months[d.months.length - 1];
+    return { unit: d.unit, name: d.name, month: l.month, water: l.water, service: l.service, total: l.water + l.service, payment: l.payment, balance: l.balance };
   }).filter(Boolean);
 
-  const totalOutstanding = rows.reduce((s,r)=>s+r.balance,0);
-  const unitsWithBalance = rows.filter(r=>r.balance>0).length;
-  const totalCollected   = rows.reduce((s,r)=>s+r.payment,0);
+  const totalOutstanding = rows.reduce((s, r) => s + r.balance, 0);
+  const unitsWithBalance = rows.filter(r => r.balance > 0).length;
+  const totalCollected   = rows.reduce((s, r) => s + r.payment, 0);
 
-  const tableRows = rows.map(r=>`
+  const tableRows = rows.map(r => `
     <tr>
       <td style="color:var(--accent);font-weight:500;text-align:left">${r.unit}</td>
       <td style="text-align:left;color:#bbb">${r.name}</td>
-      <td>${fmt(r.water)}</td><td>${fmt(r.service)}</td>
+      <td>${fmt(r.water)}</td>
+      <td>${fmt(r.service)}</td>
       <td style="color:var(--text)">${fmt(r.total)}</td>
       <td style="color:var(--accent)">${fmt(r.payment)}</td>
-      <td style="color:${r.balance>0?'#e05c5c':'var(--accent)'};font-weight:500">${fmt(r.balance)}</td>
-      <td style="text-align:left"><span class="badge ${r.balance>0?'badge-red':'badge-green'}">${r.balance>0?'Outstanding':'Cleared'}</span></td>
+      <td style="color:${r.balance > 0 ? '#e05c5c' : 'var(--accent)'};font-weight:500">${fmt(r.balance)}</td>
+      <td style="text-align:left"><span class="badge ${r.balance > 0 ? 'badge-red' : 'badge-green'}">${r.balance > 0 ? 'Outstanding' : 'Cleared'}</span></td>
     </tr>`).join('');
 
   return `
     <div class="page-header">
       <p class="page-eyebrow">Admin overview</p>
-      <h1 class="page-title">All Units — ${rows[0]?.month||''}</h1>
+      <h1 class="page-title">All Units — ${rows[0]?.month || ''}</h1>
     </div>
+
     <div class="cards">
       <div class="card"><div class="card-label">Total units</div><div class="card-value">${rows.length}</div><div class="card-sub">Active</div></div>
-      <div class="card"><div class="card-label">Units with balance</div><div class="card-value ${unitsWithBalance>0?'red':'green'}">${unitsWithBalance}</div><div class="card-sub">${unitsWithBalance>0?'Need attention':'All clear'}</div></div>
-      <div class="card"><div class="card-label">Total outstanding</div><div class="card-value ${totalOutstanding>0?'red':'green'}">${fmt(totalOutstanding)}</div><div class="card-sub">This month</div></div>
+      <div class="card"><div class="card-label">Units with balance</div><div class="card-value ${unitsWithBalance > 0 ? 'red' : 'green'}">${unitsWithBalance}</div><div class="card-sub">${unitsWithBalance > 0 ? 'Need attention' : 'All clear'}</div></div>
+      <div class="card"><div class="card-label">Total outstanding</div><div class="card-value ${totalOutstanding > 0 ? 'red' : 'green'}">${fmt(totalOutstanding)}</div><div class="card-sub">This month</div></div>
       <div class="card"><div class="card-label">Payments received</div><div class="card-value green">${fmt(totalCollected)}</div><div class="card-sub">This month</div></div>
     </div>
+
     <div class="table-box">
       <div class="section-label">Unit summary</div>
       <table>
         <thead><tr>
-          <th style="text-align:left">Unit</th><th style="text-align:left">Homeowner</th>
+          <th style="text-align:left">Unit</th>
+          <th style="text-align:left">Homeowner</th>
           <th>Water</th><th>Service</th><th>Total</th>
-          <th>Payment</th><th>Balance</th><th style="text-align:left">Status</th>
+          <th>Payment</th><th>Balance</th>
+          <th style="text-align:left">Status</th>
         </tr></thead>
         <tbody>${tableRows}</tbody>
       </table>
     </div>
+
     <p class="timestamp">Last updated: ${lastUpdated}</p>
   `;
 }
 
+// ─────────────────────────────────────────────
+// HELPER FUNCTIONS
+// ─────────────────────────────────────────────
 function togglePwd() {
   const inp = document.getElementById('password-input');
   const icon = document.getElementById('eye-icon');
-  if (inp.type==='password') {
-    inp.type='text';
-    icon.innerHTML='<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+  if (inp.type === 'password') {
+    inp.type = 'text';
+    icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
   } else {
-    inp.type='password';
-    icon.innerHTML='<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+    inp.type = 'password';
+    icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
   }
 }
 
@@ -644,142 +862,239 @@ function copyMpesa(paybill, account, amount) {
   const text = `Paybill: 522522\nAccount: 1313544337\nAmount: KSh ${Number(amount).toLocaleString()}`;
   navigator.clipboard.writeText(text).then(() => {
     const btn = document.getElementById('copy-mpesa-btn');
-    if (btn) { btn.textContent='Copied!'; setTimeout(()=>btn.textContent='Copy payment details',2000); }
-  }).catch(() => alert(`Paybill: ${paybill}\nAccount: ${account}\nAmount: KSh ${Number(amount).toLocaleString()}`));
+    if (btn) { btn.textContent = 'Copied!'; setTimeout(() => btn.textContent = 'Copy payment details', 2000); }
+  }).catch(() => {
+    alert(`Paybill: ${paybill}\nAccount: ${account}\nAmount: KSh ${Number(amount).toLocaleString()}`);
+  });
 }
 
 async function changePassword() {
-  const newPwd=document.getElementById('new-pwd').value;
-  const confirmPwd=document.getElementById('confirm-pwd').value;
-  const msgEl=document.getElementById('pwd-msg');
-  if (!newPwd||newPwd.length<6) {
-    msgEl.style.display='block'; msgEl.style.background='rgba(192,57,43,0.1)';
-    msgEl.style.color='#e07070'; msgEl.textContent='Password must be at least 6 characters.'; return;
+  const newPwd     = document.getElementById('new-pwd').value;
+  const confirmPwd = document.getElementById('confirm-pwd').value;
+  const msgEl      = document.getElementById('pwd-msg');
+
+  if (!newPwd || newPwd.length < 6) {
+    msgEl.style.display = 'block';
+    msgEl.style.background = 'rgba(192,57,43,0.1)';
+    msgEl.style.color = '#e07070';
+    msgEl.textContent = 'Password must be at least 6 characters.';
+    return;
   }
-  if (newPwd!==confirmPwd) {
-    msgEl.style.display='block'; msgEl.style.background='rgba(192,57,43,0.1)';
-    msgEl.style.color='#e07070'; msgEl.textContent='Passwords do not match.'; return;
+  if (newPwd !== confirmPwd) {
+    msgEl.style.display = 'block';
+    msgEl.style.background = 'rgba(192,57,43,0.1)';
+    msgEl.style.color = '#e07070';
+    msgEl.textContent = 'Passwords do not match.';
+    return;
   }
   try {
     const result = await supabaseUpdatePassword(currentUser.token, newPwd);
-    if (result.id||result.email) {
-      msgEl.style.display='block'; msgEl.style.background='rgba(61,153,112,0.1)';
-      msgEl.style.color='#6dbf9a';
-      msgEl.textContent='Password updated successfully. Use your new password next time you log in.';
-      document.getElementById('new-pwd').value='';
-      document.getElementById('confirm-pwd').value='';
-    } else throw new Error(result.message||'Update failed');
+    if (result.id || result.email) {
+      msgEl.style.display = 'block';
+      msgEl.style.background = 'rgba(61,153,112,0.1)';
+      msgEl.style.color = '#6dbf9a';
+      msgEl.textContent = 'Password updated successfully. Use your new password next time you log in.';
+      document.getElementById('new-pwd').value = '';
+      document.getElementById('confirm-pwd').value = '';
+    } else {
+      throw new Error(result.message || 'Update failed');
+    }
   } catch(e) {
-    msgEl.style.display='block'; msgEl.style.background='rgba(192,57,43,0.1)';
-    msgEl.style.color='#e07070'; msgEl.textContent='Failed to update password: '+e.message;
+    msgEl.style.display = 'block';
+    msgEl.style.background = 'rgba(192,57,43,0.1)';
+    msgEl.style.color = '#e07070';
+    msgEl.textContent = 'Failed to update password: ' + e.message;
   }
 }
 
+// ─────────────────────────────────────────────
+// AUTH & APP FLOW
+// ─────────────────────────────────────────────
 let currentUser = null;
-function saveSession(u) { localStorage.setItem('pp_session',JSON.stringify(u)); }
-function clearSession() { localStorage.removeItem('pp_session'); }
-function getSession() { try { return JSON.parse(localStorage.getItem('pp_session')); } catch { return null; } }
 
-async function loadApp(user) {
-  document.getElementById('login-screen').style.display='none';
-  document.getElementById('app').style.display='block';
-  document.getElementById('nav-unit').textContent = user.role==='admin' ? 'Admin' : `Unit ${user.unit}`;
-  document.getElementById('admin-badge').style.display = user.role==='admin' ? 'inline' : 'none';
-  const lastUpdated = await fetchLastUpdated();
-  if (user.role==='admin') {
-    const allData = await Promise.all(ALL_UNITS.map(async u => {
-      try { const rows=await fetchSheet(u.unit.trim()); return parseSheet(rows,u.unit.trim(),u.name); }
-      catch { return {unit:u.unit.trim(),name:u.name,months:[]}; }
-    }));
-    document.getElementById('main-content').innerHTML = renderAdmin(allData, lastUpdated);
-  } else {
-    const tabName = UNIT_TAB_MAP[user.unit]||user.unit;
-    const rows = await fetchSheet(tabName);
-    const data = parseSheet(rows, user.unit, user.name);
-    document.getElementById('main-content').innerHTML = renderHomeowner(data, lastUpdated);
-  }
+// Restore session from localStorage
+function saveSession(user) {
+  localStorage.setItem('pp_session', JSON.stringify(user));
+}
+function clearSession() {
+  localStorage.removeItem('pp_session');
+}
+function getSession() {
+  try { return JSON.parse(localStorage.getItem('pp_session')); } catch { return null; }
 }
 
 document.getElementById('login-btn').addEventListener('click', handleLogin);
-document.getElementById('password-input').addEventListener('keydown', e => { if(e.key==='Enter') handleLogin(); });
 
+// Auto-restore session on page load
 (async () => {
   const saved = getSession();
   if (!saved?.token) return;
   try {
-    const r = await fetch(SUPABASE_URL+'/auth/v1/user', { headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+saved.token} });
-    if (r.ok) { currentUser=saved; await loadApp(saved); } else clearSession();
+    // Verify token still valid
+    const r = await fetch(SUPABASE_URL + '/auth/v1/user', {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + saved.token }
+    });
+    if (r.ok) {
+      currentUser = saved;
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      document.getElementById('nav-unit').textContent = saved.role === 'admin' ? 'Admin' : `Unit ${saved.unit}`;
+      document.getElementById('admin-badge').style.display = saved.role === 'admin' ? 'inline' : 'none';
+      const lastUpdated = await fetchLastUpdated();
+      if (saved.role === 'admin') {
+        const allData = await Promise.all(ALL_UNITS.map(async u => {
+          try { const rows = await fetchSheet(u.unit.trim()); return parseSheet(rows, u.unit.trim(), u.name); }
+          catch { return { unit: u.unit.trim(), name: u.name, months: [] }; }
+        }));
+        document.getElementById('main-content').innerHTML = renderAdmin(allData, lastUpdated);
+      } else {
+        const tabName = UNIT_TAB_MAP[saved.unit] || saved.unit;
+        const rows = await fetchSheet(tabName);
+        const data = parseSheet(rows, saved.unit, saved.name);
+        document.getElementById('main-content').innerHTML = renderHomeowner(data, lastUpdated);
+      }
+    } else {
+      clearSession();
+    }
   } catch { clearSession(); }
 })();
 
-document.getElementById('forgot-link').addEventListener('click', async e => {
+document.getElementById('forgot-link').addEventListener('click', async (e) => {
   e.preventDefault();
-  const email=document.getElementById('email-input').value.trim();
-  const msgEl=document.getElementById('forgot-msg');
+  const email = document.getElementById('email-input').value.trim();
+  const msgEl = document.getElementById('forgot-msg');
   if (!email) {
-    msgEl.style.display='block'; msgEl.style.background='rgba(192,57,43,0.1)';
-    msgEl.style.color='#e07070'; msgEl.textContent='Please enter your email address first.'; return;
+    msgEl.style.display = 'block';
+    msgEl.style.background = 'rgba(192,57,43,0.1)';
+    msgEl.style.color = '#e07070';
+    msgEl.textContent = 'Please enter your email address first.';
+    return;
   }
   await supabaseForgotPassword(email);
-  msgEl.style.display='block'; msgEl.style.background='rgba(61,153,112,0.1)';
-  msgEl.style.color='#6dbf9a'; msgEl.textContent='Password reset email sent. Check your inbox.';
+  msgEl.style.display = 'block';
+  msgEl.style.background = 'rgba(61,153,112,0.1)';
+  msgEl.style.color = '#6dbf9a';
+  msgEl.textContent = 'Password reset email sent. Check your inbox.';
 });
-
+document.getElementById('password-input').addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
 document.getElementById('signout-btn').addEventListener('click', async () => {
   if (currentUser?.token) await supabaseSignOut(currentUser.token);
-  currentUser=null; clearSession();
-  document.getElementById('app').style.display='none';
-  document.getElementById('login-screen').style.display='flex';
-  document.getElementById('email-input').value='';
-  document.getElementById('password-input').value='';
-  document.getElementById('error-msg').style.display='none';
+  currentUser = null;
+  clearSession();
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('email-input').value = '';
+  document.getElementById('password-input').value = '';
+  document.getElementById('error-msg').style.display = 'none';
 });
 
+// Supabase auth helpers
 async function supabaseSignOut(token) {
-  try { await fetch(SUPABASE_URL+'/auth/v1/logout',{method:'POST',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+token}}); } catch {}
+  try {
+    await fetch(SUPABASE_URL + '/auth/v1/logout', {
+      method: 'POST',
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + token }
+    });
+  } catch(e) { console.log('Signout error:', e); }
 }
-async function supabaseSignIn(email,password) {
-  const r=await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},body:JSON.stringify({email,password})});
+
+async function supabaseSignIn(email, password) {
+  const r = await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY },
+    body: JSON.stringify({ email, password })
+  });
   return r.json();
 }
-async function supabaseUpdatePassword(token,newPassword) {
-  const r=await fetch(SUPABASE_URL+'/auth/v1/user',{method:'PUT',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+token},body:JSON.stringify({password:newPassword})});
+
+async function supabaseUpdatePassword(token, newPassword) {
+  const r = await fetch(SUPABASE_URL + '/auth/v1/user', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + token },
+    body: JSON.stringify({ password: newPassword })
+  });
   return r.json();
 }
+
 async function supabaseForgotPassword(email) {
-  await fetch(SUPABASE_URL+'/auth/v1/recover',{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},body:JSON.stringify({email,redirect_to:'https://property-portal-sooty.vercel.app'})});
+  await fetch(SUPABASE_URL + '/auth/v1/recover', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY },
+    body: JSON.stringify({ email, redirect_to: 'https://property-portal-62v3-gm6xo8bjy-luxore-d-s-projects.vercel.app' })
+  });
 }
 
 async function handleLogin() {
-  const email=document.getElementById('email-input').value.trim().toLowerCase();
-  const password=document.getElementById('password-input').value;
-  const errEl=document.getElementById('error-msg');
-  const loadEl=document.getElementById('loading-msg');
-  errEl.style.display='none'; loadEl.style.display='none';
-  if (!email||!password) { errEl.textContent='Please enter your email and password.'; errEl.style.display='block'; return; }
-  loadEl.style.display='block';
-  document.getElementById('login-btn').disabled=true;
+  const email    = document.getElementById('email-input').value.trim().toLowerCase();
+  const password = document.getElementById('password-input').value;
+  const errEl    = document.getElementById('error-msg');
+  const loadEl   = document.getElementById('loading-msg');
+
+  errEl.style.display  = 'none';
+  loadEl.style.display = 'none';
+
+  if (!email || !password) {
+    errEl.textContent = 'Please enter your email and password.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  loadEl.style.display = 'block';
+  document.getElementById('login-btn').disabled = true;
+
   try {
-    const auth=await supabaseSignIn(email,password);
-    if (!auth.access_token) { errEl.textContent='Incorrect email or password.'; errEl.style.display='block'; return; }
-    const meta=auth.user?.user_metadata||{};
-    const unit=meta.unit||'';
-    const name=meta.name||email;
-    const isAdmin=email===ADMIN_EMAIL||unit==='ADMIN';
-    currentUser={email,token:auth.access_token,unit,name,role:isAdmin?'admin':'homeowner'};
+    const auth = await supabaseSignIn(email, password);
+
+    if (!auth.access_token) {
+      errEl.textContent = 'Incorrect email or password.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    const meta = auth.user?.user_metadata || {};
+    const unit = meta.unit || '';
+    const name = meta.name || email;
+    const isAdmin = email === ADMIN_EMAIL || unit === 'ADMIN';
+
+    currentUser = { email, token: auth.access_token, unit, name, role: isAdmin ? 'admin' : 'homeowner' };
     saveSession(currentUser);
-    await loadApp(currentUser);
-  } catch(err) {
-    document.getElementById('main-content').innerHTML=`
+
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('nav-unit').textContent = isAdmin ? 'Admin' : `Unit ${unit}`;
+    document.getElementById('admin-badge').style.display = isAdmin ? 'inline' : 'none';
+
+    const lastUpdated = await fetchLastUpdated();
+
+    if (isAdmin) {
+      const allData = await Promise.all(ALL_UNITS.map(async u => {
+        try {
+          const rows = await fetchSheet(u.unit.trim());
+          return parseSheet(rows, u.unit.trim(), u.name);
+        } catch {
+          return { unit: u.unit.trim(), name: u.name, months: [] };
+        }
+      }));
+      document.getElementById('main-content').innerHTML = renderAdmin(allData, lastUpdated);
+    } else {
+      const tabName = UNIT_TAB_MAP[unit] || unit;
+      const rows = await fetchSheet(tabName);
+      const data = parseSheet(rows, unit, name);
+      document.getElementById('main-content').innerHTML = renderHomeowner(data, lastUpdated);
+    }
+  } catch (err) {
+    document.getElementById('main-content').innerHTML = `
       <div class="alert alert-danger" style="margin-top:2rem">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         <span>Could not load data. Please check your internet connection. (${err.message})</span>
       </div>`;
   } finally {
-    loadEl.style.display='none';
-    document.getElementById('login-btn').disabled=false;
+    loadEl.style.display = 'none';
+    document.getElementById('login-btn').disabled = false;
   }
 }
+
+
 </script>
 </body>
 </html>
