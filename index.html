@@ -462,7 +462,7 @@ function renderAdmin(allData, lastUpdated) {
     const l=d.months[d.months.length-1];
     return {unit:d.unit,name:d.name,month:l.month,water:l.water,service:l.service,total:l.water+l.service,payment:l.payment,balance:l.balance};
   }).filter(Boolean);
-  const totalOut=rows.reduce((s,r)=>s+r.balance,0);
+  const totalOut=rows.reduce((s,r)=>s+(r.balance>0?r.balance:0),0);
   const withBal=rows.filter(r=>r.balance>0).length;
   const collected=rows.reduce((s,r)=>s+r.payment,0);
   const tRows=rows.map(r=>`
@@ -473,7 +473,7 @@ function renderAdmin(allData, lastUpdated) {
       <td style="color:var(--text)">${fmt(r.total)}</td>
       <td style="color:var(--accent)">${fmt(r.payment)}</td>
       <td style="color:${r.balance>0?'#e05c5c':'var(--accent)'};font-weight:500">${fmt(r.balance)}</td>
-      <td style="text-align:left"><span class="badge ${r.balance>0?'badge-red':'badge-green'}">${r.balance>0?'Outstanding':'Cleared'}</span></td>
+      <td style="text-align:left"><span class="badge ${r.balance>0?'badge-red':(r.balance<0?'badge-green':'badge-green')}">${r.balance>0?'Outstanding':(r.balance<0?'Credit':'Cleared')}</span></td>
     </tr>`).join('');
   return `
     <div class="page-header" style="margin-bottom:2.2rem">
